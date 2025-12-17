@@ -17,9 +17,7 @@ export const LoginPage: FC = () => {
 
   const { mutate: loginGoogle, isPending: loginGoogleIsPending } = usePostLoginGoogle({
     onSuccess: (data) => {
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('session_user', JSON.stringify(data.user));
-      login(data.user, data.access_token);
+      login(data.data.user, data.data.access_token);
       navigate(ROUTES.HOME);
     },
     onError: () => {

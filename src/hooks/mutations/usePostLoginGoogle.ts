@@ -7,8 +7,10 @@ export function usePostLoginGoogle({
   ...props
 }: MutationOpts<
   {
-    user: SessionUser;
-    access_token: string;
+    data: {
+      user: SessionUser;
+      access_token: string;
+    };
   },
   string
 > = {}) {
