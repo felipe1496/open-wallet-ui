@@ -8,7 +8,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function sanitizeNumericOnInput(value: string, decimalPrecision?: number, min?: number) {
+export function sanitizeNumericOnInput(
+  value: string,
+  decimalPrecision?: number,
+  min?: number,
+  max?: number,
+) {
   let newValue = String(value);
 
   newValue = newValue.replace(/[^0-9.,-]/g, '');
@@ -24,7 +29,12 @@ export function sanitizeNumericOnInput(value: string, decimalPrecision?: number,
   if (min !== undefined && min >= 0) {
     newValue = newValue.replace(/-/g, '');
   } else {
-    console.log('entrei aqui');
+    newValue = newValue.replace(/(?!^)-/g, '');
+  }
+
+  if (max !== undefined && max < 0) {
+    newValue = '-' + newValue.replace(/-/g, '');
+  } else if (min === undefined || min < 0) {
     newValue = newValue.replace(/(?!^)-/g, '');
   }
 

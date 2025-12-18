@@ -10,28 +10,23 @@ import dayjs from 'dayjs';
 import type { FCC } from '../../../utils/types';
 
 interface Props {
-  defaultValues?: {
-    name: string;
-    amount: number;
-    date: Date;
-    description: string;
-  };
-  onSave: (data: { name: string; amount: number; date: Date; description: string }) => void;
+  defaultValues?: Form;
+  onSave: (data: Form) => void;
+  isLoading?: boolean;
+  isVisible?: boolean;
+  onVisibleChange?: (visible: boolean) => void;
 }
 
 const initialDefaultValues = {
   name: '',
-  amount: 0,
+  amount: '',
   date: new Date(),
   description: '',
 };
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-  amount: z
-    .string()
-    .refine((amount) => Number(amount) > 0, 'Amount must be greater than 0')
-    .refine((amount) => Number(amount) % 1 === 0, 'Amount must be an integer'),
+  amount: z.string().refine((amount) => Number(amount) < 0, 'Amount must be lower than 0'),
   date: z.string().refine((date) => dayjs(date, 'YYYY-MM-DD').isValid(), 'Invalid date'),
   description: z.string().max(400, 'Description is too long').optional(),
 });
@@ -42,6 +37,9 @@ export const SimpleExpenseDialog: FCC<Props> = ({
   defaultValues = initialDefaultValues,
   children,
   onSave,
+  isLoading = false,
+  isVisible,
+  onVisibleChange,
 }) => {
   const {
     register,
@@ -58,11 +56,11 @@ export const SimpleExpenseDialog: FCC<Props> = ({
   });
 
   const onSubmit = (data: Form) => {
-    console.log(data);
+    onSave(data);
   };
 
   return (
-    <Dialog>
+    <Dialog open={isVisible} onOpenChange={onVisibleChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
@@ -76,8 +74,8 @@ export const SimpleExpenseDialog: FCC<Props> = ({
               {...register('amount')}
               placeholder="0"
               type="number"
-              minNumber={0}
-              maxNumber={999999}
+              minNumber={-999999}
+              maxNumber={-0.999999}
               decimalPrecision={2}
             />
           </label>
@@ -94,7 +92,7 @@ export const SimpleExpenseDialog: FCC<Props> = ({
             <Button className="w-full" variant="ghost">
               Cancel
             </Button>
-            <Button className="w-full">Save</Button>
+            <Button className="w-full">{isLoading ? 'Saving...' : 'Save'}</Button>
           </div>
         </form>
       </DialogContent>

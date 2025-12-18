@@ -5,12 +5,47 @@ import { HomePage } from './pages/HomePage';
 import { Layout } from './components/Layout';
 import { WalletPage } from './pages/wallet/WalletPage';
 import { NewTransactionPage } from './pages/wallet/NewTransactionPage';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'sonner';
+import {
+  MutationCache,
+  QueryClient,
+  QueryClientProvider,
+  type QueryKey,
+} from '@tanstack/react-query';
+import { toast, Toaster } from 'sonner';
 import { useEffect } from 'react';
 import { useSessionStore } from './stores/useSessionStore';
+import { ConfirmDialog } from './components/commons/ConfirmDialog';
+
+declare module '@tanstack/react-query' {
+  interface Register {
+    mutationMeta: {
+      invalidateQuery?: QueryKey;
+      successNotification?: string;
+      errorNotification?: string;
+    };
+  }
+}
 
 const queryClient = new QueryClient({
+  mutationCache: new MutationCache({
+    onSuccess: (_data, _variables, _context, mutation) => {
+      if (mutation.meta?.successNotification) {
+        toast.success(mutation.meta.successNotification);
+      }
+    },
+    onError: (_error, _variables, _context, mutation) => {
+      if (mutation.meta?.errorNotification) {
+        toast.error(mutation.meta?.errorNotification);
+      }
+    },
+    onSettled: (_data, _error, _variables, _context, mutation) => {
+      if (mutation.meta?.invalidateQuery) {
+        queryClient.invalidateQueries({
+          queryKey: mutation.meta.invalidateQuery,
+        });
+      }
+    },
+  }),
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
@@ -39,6 +74,7 @@ function App() {
           <Route path={ROUTES.WALLET.NEW} element={<NewTransactionPage />} />
         </Route>
       </Routes>
+      <ConfirmDialog />
     </QueryClientProvider>
   );
 }

@@ -1,17 +1,22 @@
 import { useState, type FC } from 'react';
-import { useCtxStore } from '../../../stores/useCtxStore';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { getEntriesQueryOpts } from '../../../queries/transactions-queries';
+import { entriesKeys, getEntriesQueryOpts } from '../../../queries/transactions-queries';
 import dayjs from 'dayjs';
 import { DataTable, type Column } from '../../../components/commons/DataTable';
 import type { TransactionsService } from '../../../services/transactions-service';
 import { TablePagination } from '../../../components/commons/TablePagination';
 import { Skeleton } from '../../../components/commons/Skeleton';
-import { BanknoteArrowDownIcon } from 'lucide-react';
+import { BanknoteArrowDownIcon, TrashIcon } from 'lucide-react';
+import { useCtx } from '../../../hooks/useCtx';
+import { Button } from '../../../components/commons/Button';
+import { useConfirmStore } from '../../../stores/useConfirmStore';
+import { useDeleteTransaction } from '../../../hooks/mutations/useDeleteTransaction';
 
 export const WalletList: FC = () => {
+  const [isDeleting, setIsDeleting] = useState<string>('');
   const [currentPage, setCurrentPage] = useState(1);
-  const { period } = useCtxStore();
+  const { period } = useCtx();
+  const confirm = useConfirmStore();
 
   const ITEMS_PER_PAGE = 10;
 
@@ -21,6 +26,20 @@ export const WalletList: FC = () => {
       per_page: ITEMS_PER_PAGE,
     }),
     placeholderData: keepPreviousData,
+  });
+
+  const { mutate: deleteTransaction } = useDeleteTransaction({
+    onMutate: (id) => {
+      setIsDeleting(id);
+    },
+    onSettled: () => {
+      setIsDeleting('');
+    },
+    meta: {
+      successNotification: 'Transaction deleted successfully',
+      errorNotification: 'An error occurred while deleting the transaction',
+      invalidateQuery: [...entriesKeys.all()],
+    },
   });
 
   const totalPages = data?.query.total_pages;
@@ -65,20 +84,48 @@ export const WalletList: FC = () => {
       title: 'Amount',
       render: (d) => d.amount,
       isLoading: <Skeleton variant="text" width={40} height={24} />,
-      trClassName: 'w-[20%]',
+      trClassName: 'w-[30%]',
     },
     {
       id: 'installment',
       title: 'Installment',
       render: (d) => `${d.installment}/${d.total_installments}`,
       isLoading: <Skeleton variant="text" width={20} height={24} />,
-      trClassName: 'w-[20%]',
+      trClassName: 'w-[10%]',
+    },
+    {
+      id: 'actions',
+      title: '',
+      render: (data) => (
+        <Button
+          variant="outlined"
+          size="sm"
+          onClick={() =>
+            confirm.add(
+              'Delete Transaction',
+              'This action will delete this entry and all other entries related to it. Are you sure? This action cannot be undone.',
+              () => deleteTransaction(data.transaction_id),
+            )
+          }
+        >
+          <TrashIcon />
+        </Button>
+      ),
+      trClassName: 'w-[10%]',
     },
   ];
 
   return (
     <>
-      <DataTable columns={columns} data={data?.data.entries ?? []} isLoading={isFetching} />
+      <DataTable
+        columns={columns}
+        data={data?.data.entries ?? []}
+        isLoading={isFetching}
+        getRowProps={(row) => ({
+          className: isDeleting === row.transaction_id ? 'opacity-30 pointer-events-none' : '',
+          'aria-busy': isDeleting === row.transaction_id,
+        })}
+      />
       <TablePagination
         currentPage={currentPage}
         totalPages={totalPages ?? 0}

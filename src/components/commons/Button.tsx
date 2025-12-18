@@ -9,6 +9,7 @@ const variants = {
 };
 
 const sizes = {
+  sm: 'h-8 px-3 font-medium text-xs',
   md: 'h-10 px-4 font-medium text-sm',
   wide: 'w-full h-12 py-2 font-medium text-sm',
 };

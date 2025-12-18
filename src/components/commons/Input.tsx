@@ -31,13 +31,14 @@ export const Input: FC<Props> = ({
     const el = evt.target;
     switch (type) {
       case 'number': {
-        const newValue = sanitizeNumericOnInput(el.value, decimalPrecision, minNumber);
+        const newValue = sanitizeNumericOnInput(el.value, decimalPrecision, minNumber, maxNumber);
         el.value = newValue;
         break;
       }
       default:
         break;
     }
+    if (onInput) onInput(evt);
   };
 
   const handleOnBlur = (evt: ChangeEvent<HTMLInputElement>) => {

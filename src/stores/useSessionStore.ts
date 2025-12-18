@@ -12,7 +12,7 @@ interface Actions {
   startUpSession: () => void;
 }
 
-const initialState = {
+const initialState: States = {
   sessionUser: null,
   sessionIsSettled: false,
 };

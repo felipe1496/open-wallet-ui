@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from '../../utils/functions';
 
 export interface Column<T> {
@@ -13,9 +13,10 @@ interface Props<T> {
   columns: Column<T>[];
   data: T[];
   isLoading?: boolean;
+  getRowProps?: (row: T) => HTMLAttributes<HTMLTableRowElement>;
 }
 
-export const DataTable = <T,>({ columns, data, isLoading = true }: Props<T>) => {
+export const DataTable = <T,>({ columns, data, isLoading = true, getRowProps }: Props<T>) => {
   function renderRows() {
     if (isLoading) {
       return Array.from({ length: 10 }).map((_, rowIndex) => (
@@ -45,18 +46,22 @@ export const DataTable = <T,>({ columns, data, isLoading = true }: Props<T>) => 
       );
     }
 
-    return data.map((row, rowIndex) => (
-      <tr key={`table-row-${rowIndex}`}>
-        {columns.map((column) => (
-          <td
-            key={`table-cell-${rowIndex}-${String(column.id)}`}
-            className={cn('border-b border-zinc-800 px-3 py-2')}
-          >
-            {column.render ? column.render(row) : null}
-          </td>
-        ))}
-      </tr>
-    ));
+    return data.map((row, rowIndex) => {
+      const rowProps = getRowProps?.(row) || {};
+      const { className: rowClassName, ...rest } = rowProps;
+      return (
+        <tr key={`table-row-${rowIndex}`} {...rest} className={cn(rowClassName)}>
+          {columns.map((column) => (
+            <td
+              key={`table-cell-${rowIndex}-${String(column.id)}`}
+              className={cn('border-b border-zinc-800 px-3 py-2')}
+            >
+              {column.render ? column.render(row) : null}
+            </td>
+          ))}
+        </tr>
+      );
+    });
   }
   return (
     <table className="w-full">

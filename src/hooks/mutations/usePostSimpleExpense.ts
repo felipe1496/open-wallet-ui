@@ -1,0 +1,17 @@
+import { useMutation } from '@tanstack/react-query';
+import type { MutationOpts } from '../../utils/types';
+import { TransactionsService } from '../../services/transactions-service';
+
+export function usePostSimpleExpense({
+  mutationKey = [],
+  ...props
+}: MutationOpts<
+  Awaited<ReturnType<typeof TransactionsService.postSimpleExpense>>,
+  Parameters<typeof TransactionsService.postSimpleExpense>[0]
+> = {}) {
+  return useMutation({
+    ...props,
+    mutationKey: ['LOGIN_GOOGLE_MUTATION', ...mutationKey],
+    mutationFn: TransactionsService.postSimpleExpense,
+  });
+}

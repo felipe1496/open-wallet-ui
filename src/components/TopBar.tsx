@@ -11,12 +11,13 @@ import { useNavigate } from 'react-router';
 import { ROUTES } from '../constants/routes';
 import { Avatar, AvatarFallback, AvatarImage } from './commons/Avatar';
 import { PeriodPickerCustom } from './commons/PeriodPickerCustom';
-import { useCtxStore } from '../stores/useCtxStore';
+
 import { MONTHS_FULL } from '../constants/dates';
+import { useCtx } from '../hooks/useCtx';
 
 export const TopBar: FC = () => {
   const { logout, sessionUser } = useSessionStore();
-  const { period, setPeriod } = useCtxStore();
+  const { period, setPeriod } = useCtx();
 
   const navigate = useNavigate();
 
