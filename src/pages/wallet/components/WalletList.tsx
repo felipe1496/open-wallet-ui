@@ -6,7 +6,7 @@ import { DataTable, type Column } from '../../../components/commons/DataTable';
 import type { TransactionsService } from '../../../services/transactions-service';
 import { TablePagination } from '../../../components/commons/TablePagination';
 import { Skeleton } from '../../../components/commons/Skeleton';
-import { BanknoteArrowDownIcon, TrashIcon } from 'lucide-react';
+import { BanknoteArrowDownIcon, BanknoteArrowUpIcon, TrashIcon } from 'lucide-react';
 import { useCtx } from '../../../hooks/useCtx';
 import { Button } from '../../../components/commons/Button';
 import { useConfirmStore } from '../../../stores/useConfirmStore';
@@ -61,6 +61,13 @@ export const WalletList: FC = () => {
               </div>
             );
             break;
+          case 'income':
+            icon = (
+              <div className="rounded-full bg-green-950 p-2">
+                <BanknoteArrowUpIcon className="size-8 text-green-500" />
+              </div>
+            );
+            break;
           default:
             break;
         }
@@ -82,7 +89,8 @@ export const WalletList: FC = () => {
     {
       id: 'amount',
       title: 'Amount',
-      render: (d) => d.amount,
+      render: (d) =>
+        Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(d.amount),
       isLoading: <Skeleton variant="text" width={40} height={24} />,
       trClassName: 'w-[30%]',
     },

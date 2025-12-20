@@ -61,4 +61,30 @@ export const TransactionsService = {
   async deleteTransaction(id: string) {
     await API.delete(`/v1/transactions/${id}`);
   },
+
+  async postIncome(payload: {
+    name: string;
+    amount: number;
+    period: string;
+    description?: string | null;
+  }) {
+    const response = await API.post<{
+      data: {
+        entry: {
+          id: string;
+          transaction_id: string;
+          description?: string | null;
+          amount: number;
+          period: string;
+          user_id: string;
+          type: string;
+          total_amount: number;
+          installment: number;
+          total_installments: number;
+        };
+      };
+    }>('/v1/transactions/income', payload);
+
+    return response.data;
+  },
 };

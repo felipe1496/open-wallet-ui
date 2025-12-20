@@ -3,11 +3,13 @@ import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { Input } from '../../../components/commons/Input';
 import { Dialog } from '@radix-ui/react-dialog';
-import { DialogContent, DialogTrigger } from '../../../components/commons/Dialog';
+import { DialogClose, DialogContent, DialogTrigger } from '../../../components/commons/Dialog';
 import { Button } from '../../../components/commons/Button';
 import { Textarea } from '../../../components/commons/Textarea';
 import dayjs from 'dayjs';
 import type { FCC } from '../../../utils/types';
+import { MoneyInput } from '../../../components/commons/MoneyInput';
+import { formatCurrency } from '../../../utils/functions';
 
 interface Props {
   defaultValues?: Form;
@@ -19,14 +21,14 @@ interface Props {
 
 const initialDefaultValues = {
   name: '',
-  amount: '',
+  amount: `${formatCurrency(0)}`,
   date: new Date(),
   description: '',
 };
 
 const schema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-  amount: z.string().refine((amount) => Number(amount) < 0, 'Amount must be lower than 0'),
+  amount: z.string(),
   date: z.string().refine((date) => dayjs(date, 'YYYY-MM-DD').isValid(), 'Invalid date'),
   description: z.string().max(400, 'Description is too long').optional(),
 });
@@ -70,14 +72,7 @@ export const SimpleExpenseDialog: FCC<Props> = ({
           </label>
           <label className="flex flex-col text-sm">
             <span data-error={errors.amount?.message || '*'}>Amount</span>
-            <Input
-              {...register('amount')}
-              placeholder="0"
-              type="number"
-              minNumber={-999999}
-              maxNumber={-0.999999}
-              decimalPrecision={2}
-            />
+            <MoneyInput {...register('amount')} minValue={0} maxValue={999999} />
           </label>
           <label className="flex flex-col text-sm">
             <span data-error={errors.date?.message || '*'}>Date</span>
@@ -89,9 +84,11 @@ export const SimpleExpenseDialog: FCC<Props> = ({
           </label>
 
           <div className="flex w-full gap-2">
-            <Button className="w-full" variant="ghost">
-              Cancel
-            </Button>
+            <DialogClose asChild>
+              <Button className="w-full" variant="ghost">
+                Cancel
+              </Button>
+            </DialogClose>
             <Button className="w-full">{isLoading ? 'Saving...' : 'Save'}</Button>
           </div>
         </form>

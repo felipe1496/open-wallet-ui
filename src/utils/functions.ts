@@ -114,3 +114,14 @@ export const createStore = (<T>() => {
     return store;
   };
 }) as typeof actualCreate;
+
+export function formatCurrency(amount: number): string {
+  return amount.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+}
+
+export function parseUSD(value: string) {
+  return Number(value.replace(/,/g, ''));
+}

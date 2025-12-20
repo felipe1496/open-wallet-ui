@@ -11,7 +11,7 @@ export function usePostSimpleExpense({
 > = {}) {
   return useMutation({
     ...props,
-    mutationKey: ['LOGIN_GOOGLE_MUTATION', ...mutationKey],
+    mutationKey: ['POST_SIMPLE_EXPENSE_MUTATION', ...mutationKey],
     mutationFn: TransactionsService.postSimpleExpense,
   });
 }

@@ -3,7 +3,6 @@ import {
   BanknoteArrowUpIcon,
   CalendarSyncIcon,
   DiamondPercentIcon,
-  WaypointsIcon,
 } from 'lucide-react';
 import { useState, type FC } from 'react';
 import { SimpleExpenseDialog } from './components/SimpleExpenseDialog';
@@ -15,9 +14,12 @@ import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
 import { ROUTES } from '../../constants/routes';
 import { entriesKeys } from '../../queries/transactions-queries';
+import { parseUSD } from '../../utils/functions';
+import { usePostIncome } from '../../hooks/mutations/usePostIncome';
 
 export const NewTransactionPage: FC = () => {
   const [simpleExpenseIsVisible, setSimpleExpenseIsVisible] = useState(false);
+  const [incomeIsVisible, setIncomeIsVisible] = useState(false);
   const navigate = useNavigate();
 
   const { mutate: postSimpleExpense, isPending: isPostSimpleExpensePending } = usePostSimpleExpense(
@@ -34,6 +36,18 @@ export const NewTransactionPage: FC = () => {
     },
   );
 
+  const { mutate: postIncome, isPending: isPostIncomePending } = usePostIncome({
+    onSuccess: (data) => {
+      setSimpleExpenseIsVisible(false);
+      navigate(`${ROUTES.WALLET.LIST}?period=${data.data.entry.period}`);
+    },
+    meta: {
+      successNotification: 'Transaction created successfully',
+      errorNotification: 'There was an error creating the transaction',
+      invalidateQuery: [...entriesKeys.all()],
+    },
+  });
+
   return (
     <Page>
       <main className="flex w-full flex-col items-center px-8 py-16">
@@ -45,7 +59,7 @@ export const NewTransactionPage: FC = () => {
             onVisibleChange={setSimpleExpenseIsVisible}
             onSave={(data) => {
               postSimpleExpense({
-                amount: Number(data.amount),
+                amount: parseUSD(data.amount),
                 name: data.name,
                 period: dayjs(data.date).format('YYYYMM'),
                 description: data.description,
@@ -58,7 +72,19 @@ export const NewTransactionPage: FC = () => {
               <span className="text-2xl">Expense</span>
             </button>
           </SimpleExpenseDialog>
-          <IncomeDialog onSave={() => {}}>
+          <IncomeDialog
+            isVisible={incomeIsVisible}
+            onVisibleChange={setIncomeIsVisible}
+            onSave={(data) => {
+              postIncome({
+                amount: parseUSD(data.amount),
+                name: data.name,
+                period: dayjs(data.date).format('YYYYMM'),
+                description: data.description,
+              });
+            }}
+            isLoading={isPostIncomePending}
+          >
             <button className="flex cursor-pointer flex-col items-center justify-center rounded-md bg-zinc-950 p-12 text-zinc-600 transition-colors hover:bg-green-400 hover:text-green-800">
               <BanknoteArrowUpIcon className="size-24" />
               <span className="text-2xl">Income</span>
@@ -74,10 +100,10 @@ export const NewTransactionPage: FC = () => {
             <CalendarSyncIcon className="size-24" />
             <span className="text-2xl">Recurring</span>
           </button>
-          <button className="flex cursor-pointer flex-col items-center justify-center rounded-md bg-zinc-950 p-12 text-zinc-600 transition-colors hover:bg-blue-400 hover:text-blue-800">
+          {/* <button className="flex cursor-pointer flex-col items-center justify-center rounded-md bg-zinc-950 p-12 text-zinc-600 transition-colors hover:bg-blue-400 hover:text-blue-800">
             <WaypointsIcon className="size-24" />
             <span className="text-2xl">Shared</span>
-          </button>
+          </button> */}
         </div>
       </main>
     </Page>
