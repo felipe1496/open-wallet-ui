@@ -6,7 +6,12 @@ import { DataTable, type Column } from '../../../components/commons/DataTable';
 import type { TransactionsService } from '../../../services/transactions-service';
 import { TablePagination } from '../../../components/commons/TablePagination';
 import { Skeleton } from '../../../components/commons/Skeleton';
-import { BanknoteArrowDownIcon, BanknoteArrowUpIcon, TrashIcon } from 'lucide-react';
+import {
+  BanknoteArrowDownIcon,
+  BanknoteArrowUpIcon,
+  DiamondPercentIcon,
+  TrashIcon,
+} from 'lucide-react';
 import { useCtx } from '../../../hooks/useCtx';
 import { Button } from '../../../components/commons/Button';
 import { useConfirmStore } from '../../../stores/useConfirmStore';
@@ -65,6 +70,13 @@ export const WalletList: FC = () => {
             icon = (
               <div className="rounded-full bg-green-950 p-2">
                 <BanknoteArrowUpIcon className="size-8 text-green-500" />
+              </div>
+            );
+            break;
+          case 'installment':
+            icon = (
+              <div className="rounded-full bg-orange-950 p-2">
+                <DiamondPercentIcon className="size-7 text-orange-500" />
               </div>
             );
             break;
