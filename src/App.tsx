@@ -13,6 +13,8 @@ import { toast, Toaster } from 'sonner';
 import { useEffect } from 'react';
 import { useSessionStore } from './stores/useSessionStore';
 import { ConfirmDialog } from './components/commons/ConfirmDialog';
+import { HomePage } from './pages/HomePage';
+import { NewTransactionPage } from './pages/wallet/NewTransactionPage';
 
 declare module '@tanstack/react-query' {
   interface Register {
@@ -67,9 +69,9 @@ function App() {
       <Routes>
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route element={<Layout />}>
-          {/* <Route path={ROUTES.HOME} element={<HomePage />} />
+          <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.WALLET.LIST} element={<WalletPage />} />
-          <Route path={ROUTES.WALLET.NEW} element={<NewTransactionPage />} /> */}
+          <Route path={ROUTES.WALLET.NEW} element={<NewTransactionPage />} />
           <Route path={ROUTES.HOME} element={<WalletPage />} />
         </Route>
       </Routes>

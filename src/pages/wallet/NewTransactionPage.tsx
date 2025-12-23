@@ -70,7 +70,7 @@ export const NewTransactionPage: FC = () => {
               postSimpleExpense({
                 amount: parseUSD(data.amount),
                 name: data.name,
-                period: dayjs(data.date).format('YYYYMM'),
+                reference_date: dayjs(data.date).toISOString(),
                 description: data.description,
               });
             }}
@@ -88,7 +88,7 @@ export const NewTransactionPage: FC = () => {
               postIncome({
                 amount: parseUSD(data.amount),
                 name: data.name,
-                period: dayjs(data.date).format('YYYYMM'),
+                reference_date: dayjs(data.date).toISOString(),
                 description: data.description,
               });
             }}
@@ -105,7 +105,7 @@ export const NewTransactionPage: FC = () => {
                 name: data.name,
                 total_amount: parseUSD(data.amount),
                 total_installments: Number(data.installments),
-                period: dayjs().year(data.period.year).month(data.period.month).format('YYYYMM'),
+                reference_date: dayjs(data.date).toISOString(),
                 description: data.description,
               });
             }}

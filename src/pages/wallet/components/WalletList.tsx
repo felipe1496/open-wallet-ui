@@ -104,7 +104,7 @@ export const WalletList: FC = () => {
       render: (d) =>
         Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(d.amount),
       isLoading: <Skeleton variant="text" width={40} height={24} />,
-      trClassName: 'w-[30%]',
+      trClassName: 'w-[10%]',
     },
     {
       id: 'installment',
@@ -112,6 +112,13 @@ export const WalletList: FC = () => {
       render: (d) => `${d.installment}/${d.total_installments}`,
       isLoading: <Skeleton variant="text" width={20} height={24} />,
       trClassName: 'w-[10%]',
+    },
+    {
+      id: 'due_date',
+      title: 'Date',
+      render: (d) => dayjs(d.reference_date).format('MMM D, YYYY'),
+      isLoading: <Skeleton variant="text" width={40} height={24} />,
+      trClassName: 'w-[20%]',
     },
     {
       id: 'actions',

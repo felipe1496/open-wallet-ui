@@ -1,4 +1,4 @@
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Button } from '../../../components/commons/Button';
 import {
   Dialog,
@@ -13,19 +13,16 @@ import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MoneyInput } from '../../../components/commons/input/MoneyInput';
 import { NumberInput } from '../../../components/commons/input/NumberInput';
-import { PeriodPickerInput } from '../../../components/commons/input/PeriodPickerInput';
 import { useCtx } from '../../../hooks/useCtx';
 import { formatCurrency } from '../../../utils/functions';
+import dayjs from 'dayjs';
 
 interface Props {
   defaultValues?: {
     name: string;
     amount: number;
     installments: number;
-    period: {
-      month: number;
-      year: number;
-    };
+    date: string;
     description: string;
   };
   onSave: (data: Form) => void;
@@ -37,10 +34,7 @@ interface Props {
 const schema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
   amount: z.string(),
-  period: z.object({
-    month: z.number().min(0).max(11),
-    year: z.number().min(1900),
-  }),
+  date: z.string(),
   installments: z
     .string()
     .refine((installments) => Number(installments) % 1 === 0, 'Installments must be an integer'),
@@ -58,27 +52,26 @@ export const InstallmentDialog: FCC<Props> = ({
   isLoading = false,
 }) => {
   const { period } = useCtx();
+  console.log(period.year, period.month, dayjs().day());
   const defaultValuesDefined = {
     name: defaultValues?.name || '',
     amount: defaultValues?.amount || 0,
     installments: defaultValues?.installments || 2,
-    period: defaultValues?.period || { month: period.month, year: period.year },
+    date:
+      defaultValues?.date ||
+      dayjs().year(period.year).month(period.month).date(dayjs().date()).format('YYYY-MM-DD'),
     description: defaultValues?.description || '',
   };
   const {
     register,
     handleSubmit,
     formState: { errors },
-    control,
   } = useForm<Form>({
     defaultValues: {
       name: defaultValuesDefined.name,
       amount: formatCurrency(defaultValuesDefined.amount),
       installments: defaultValuesDefined.installments.toString(),
-      period: {
-        month: defaultValuesDefined.period.month,
-        year: defaultValuesDefined.period.year,
-      },
+      date: defaultValuesDefined.date,
       description: defaultValuesDefined.description,
     },
     resolver: zodResolver(schema),
@@ -108,14 +101,8 @@ export const InstallmentDialog: FCC<Props> = ({
               <NumberInput {...register('installments')} />
             </label>
             <label className="flex flex-col text-sm">
-              <span data-error={errors.period?.message || '*'}>Period</span>
-              <Controller
-                control={control}
-                name="period"
-                render={({ field }) => (
-                  <PeriodPickerInput value={field.value} onChange={field.onChange} />
-                )}
-              />
+              <span data-error={errors.date?.message || '*'}>Period</span>
+              <Input type="date" {...register('date')} />
             </label>
             <label className="flex flex-col text-sm">
               <span data-error={errors.description?.message}>Description</span>

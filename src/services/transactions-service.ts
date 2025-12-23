@@ -18,6 +18,7 @@ export const TransactionsService = {
           installment: number;
           total_installments: number;
           created_at: string;
+          reference_date: string;
         }[];
       };
       query: {
@@ -36,7 +37,7 @@ export const TransactionsService = {
   async postSimpleExpense(payload: {
     name: string;
     amount: number;
-    period: string;
+    reference_date: string;
     description?: string | null;
   }) {
     const response = await API.post<{
@@ -52,6 +53,7 @@ export const TransactionsService = {
           total_amount: number;
           installment: number;
           total_installments: number;
+          due_date: string;
         };
       };
     }>('/v1/transactions/simple-expense', payload);
@@ -65,7 +67,7 @@ export const TransactionsService = {
   async postIncome(payload: {
     name: string;
     amount: number;
-    period: string;
+    reference_date: string;
     description?: string | null;
   }) {
     const response = await API.post<{
@@ -92,7 +94,7 @@ export const TransactionsService = {
     description?: string | null;
     total_amount: number;
     total_installments: number;
-    period: string;
+    reference_date: string;
   }) {
     const response = await API.post<{
       data: {
