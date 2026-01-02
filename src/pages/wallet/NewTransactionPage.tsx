@@ -1,17 +1,18 @@
-import { BanknoteArrowDownIcon, BanknoteArrowUpIcon, DiamondPercentIcon } from 'lucide-react';
 import { useState, type FC } from 'react';
-import { SimpleExpenseDialog } from './components/SimpleExpenseDialog';
-import { IncomeDialog } from './components/IncomeDialog';
-import { InstallmentDialog } from './components/InstallmentDialog';
 import { Page } from '../../components/commons/Page';
 import { usePostSimpleExpense } from '../../hooks/mutations/usePostSimpleExpense';
-import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
 import { ROUTES } from '../../constants/routes';
 import { entriesKeys } from '../../queries/transactions-queries';
-import { parseUSD } from '../../utils/functions';
 import { usePostIncome } from '../../hooks/mutations/usePostIncome';
 import { usePostInstallment } from '../../hooks/mutations/usePostInstallment';
+import { Card } from '../../components/commons/Card';
+import { BanknoteArrowDownIcon, BanknoteArrowUpIcon, SquareDivideIcon } from 'lucide-react';
+import { parseUSD } from '../../utils/functions';
+import dayjs from 'dayjs';
+import { AddSimpleExpenseDialog } from './components/AddSimpleExpenseDialog';
+import { AddIncomeDialog } from './components/AddIncomeDialog';
+import { AddInstallmentDialog } from './components/AddInstallmentDialog';
 
 export const NewTransactionPage: FC = () => {
   const [simpleExpenseIsVisible, setSimpleExpenseIsVisible] = useState(false);
@@ -59,74 +60,97 @@ export const NewTransactionPage: FC = () => {
 
   return (
     <Page>
-      <main className="flex w-full flex-col items-center px-8 py-16">
-        <h1 className="font-title text-4xl font-bold text-shadow-2xs">Select a transaction type</h1>
+      <main className="flex w-full flex-col items-center p-2">
+        <header className="mb-4 flex w-full items-center justify-between">
+          <h1 className="text-xl font-medium">Add Transaction</h1>
+        </header>
 
-        <div className="mt-12 grid w-full grid-cols-4 gap-6">
-          <SimpleExpenseDialog
-            isVisible={simpleExpenseIsVisible}
-            onVisibleChange={setSimpleExpenseIsVisible}
-            onSave={(data) => {
-              postSimpleExpense({
-                amount: parseUSD(data.amount),
-                name: data.name,
-                reference_date: dayjs(data.date).toISOString(),
-                description: data.description,
-              });
-            }}
-            isLoading={isPostSimpleExpensePending}
-          >
-            <button className="flex cursor-pointer flex-col items-center justify-center rounded-md bg-zinc-950 p-12 text-zinc-600 transition-colors hover:bg-red-400 hover:text-red-800">
-              <BanknoteArrowDownIcon className="size-16" />
-              <span className="text-2xl">Expense</span>
-            </button>
-          </SimpleExpenseDialog>
-          <IncomeDialog
-            isVisible={incomeIsVisible}
-            onVisibleChange={setIncomeIsVisible}
-            onSave={(data) => {
-              postIncome({
-                amount: parseUSD(data.amount),
-                name: data.name,
-                reference_date: dayjs(data.date).toISOString(),
-                description: data.description,
-              });
-            }}
-            isLoading={isPostIncomePending}
-          >
-            <button className="flex cursor-pointer flex-col items-center justify-center rounded-md bg-zinc-950 p-12 text-zinc-600 transition-colors hover:bg-green-400 hover:text-green-800">
-              <BanknoteArrowUpIcon className="size-16" />
-              <span className="text-2xl">Income</span>
-            </button>
-          </IncomeDialog>
-          <InstallmentDialog
-            onSave={(data) => {
-              postInstallment({
-                name: data.name,
-                total_amount: parseUSD(data.amount),
-                total_installments: Number(data.installments),
-                reference_date: dayjs(data.date).toISOString(),
-                description: data.description,
-              });
-            }}
-            isVisible={installmentIsVisible}
-            onVisibleChange={setInstallmentIsVisible}
-            isLoading={isPostInstallmentPending}
-          >
-            <button className="flex cursor-pointer flex-col items-center justify-center rounded-md bg-zinc-950 p-12 text-zinc-600 transition-colors hover:bg-orange-400 hover:text-orange-800">
-              <DiamondPercentIcon className="size-16" />
-              <span className="text-2xl">Installment</span>
-            </button>
-          </InstallmentDialog>
-          {/* <button className="flex cursor-pointer flex-col items-center justify-center rounded-md bg-zinc-950 p-12 text-zinc-600 transition-colors hover:bg-purple-400 hover:text-purple-800">
-            <CalendarSyncIcon className="size-16" />
-            <span className="text-2xl">Recurring</span>
-          </button> */}
-          {/* <button className="flex cursor-pointer flex-col items-center justify-center rounded-md bg-zinc-950 p-12 text-zinc-600 transition-colors hover:bg-blue-400 hover:text-blue-800">
-            <WaypointsIcon className="size-16" />
-            <span className="text-2xl">Shared</span>
-          </button> */}
-        </div>
+        <Card
+          header={<h2 className="text-muted-foreground">Choose the type of transaction</h2>}
+          className="flex items-center justify-center"
+        >
+          <div className="grid grid-cols-2 gap-4">
+            <AddSimpleExpenseDialog
+              isVisible={simpleExpenseIsVisible}
+              onVisibleChange={setSimpleExpenseIsVisible}
+              onSave={(data) => {
+                postSimpleExpense({
+                  amount: parseUSD(data.amount),
+                  name: data.name,
+                  reference_date: dayjs(data.date).toISOString(),
+                  description: data.description,
+                });
+              }}
+              isLoading={isPostSimpleExpensePending}
+            >
+              <button className="flex h-28 w-full max-w-2xs cursor-pointer flex-col gap-4 rounded border border-red-200 bg-red-50 p-2 text-left shadow">
+                <div className="flex items-center gap-2">
+                  <BanknoteArrowDownIcon strokeWidth={1.5} className="size-7 text-red-500" />
+
+                  <h3 className="font-medium">Expense</h3>
+                </div>
+
+                <p className="text-muted-foreground text-sm">
+                  Suitable for one-time simple expenses on your day.
+                </p>
+              </button>
+            </AddSimpleExpenseDialog>
+
+            <AddIncomeDialog
+              isVisible={incomeIsVisible}
+              onVisibleChange={setIncomeIsVisible}
+              onSave={(data) => {
+                postIncome({
+                  amount: parseUSD(data.amount),
+                  name: data.name,
+                  reference_date: dayjs(data.date).toISOString(),
+                  description: data.description,
+                });
+              }}
+              isLoading={isPostIncomePending}
+            >
+              <button className="flex h-28 w-full max-w-2xs cursor-pointer flex-col gap-4 rounded border border-green-200 bg-green-50 p-2 text-left shadow">
+                <div className="flex items-center gap-2">
+                  <BanknoteArrowUpIcon strokeWidth={1.5} className="size-7 text-green-500" />
+
+                  <h3 className="font-medium">Income</h3>
+                </div>
+
+                <p className="text-muted-foreground text-sm">
+                  Suitable for one-time simple incomes on your day.
+                </p>
+              </button>
+            </AddIncomeDialog>
+
+            <AddInstallmentDialog
+              isVisible={installmentIsVisible}
+              onVisibleChange={setInstallmentIsVisible}
+              onSave={(data) => {
+                postInstallment({
+                  name: data.name,
+                  total_amount: parseUSD(data.amount),
+                  total_installments: Number(data.installments),
+                  reference_date: dayjs(data.date).toISOString(),
+                  description: data.description,
+                  category_id: data.category?.id,
+                });
+              }}
+              isLoading={isPostInstallmentPending}
+            >
+              <button className="flex h-28 w-full max-w-2xs cursor-pointer flex-col gap-4 rounded border border-amber-200 bg-amber-50 p-2 text-left shadow">
+                <div className="flex items-center gap-2">
+                  <SquareDivideIcon strokeWidth={1.5} className="size-6 text-amber-500" />
+
+                  <h3 className="font-medium">Installment</h3>
+                </div>
+
+                <p className="text-muted-foreground text-sm">
+                  Suitable for monthly installments, such as rent, utilities, etc.
+                </p>
+              </button>
+            </AddInstallmentDialog>
+          </div>
+        </Card>
       </main>
     </Page>
   );

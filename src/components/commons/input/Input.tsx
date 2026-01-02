@@ -5,7 +5,7 @@ export const Input: FC<InputHTMLAttributes<HTMLInputElement>> = ({ className, ..
   return (
     <input
       className={cn(
-        'h-10 rounded-md border border-zinc-600 px-2 text-sm placeholder:text-zinc-600',
+        'placeholder:text-muted-foreground h-10 rounded-md border border-zinc-300 px-2 text-sm',
         className,
       )}
       {...props}

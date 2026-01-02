@@ -11,10 +11,12 @@ import {
 } from '@tanstack/react-query';
 import { toast, Toaster } from 'sonner';
 import { useEffect } from 'react';
-import { useSessionStore } from './stores/useSessionStore';
+import { useSession } from './hooks/useSession';
 import { ConfirmDialog } from './components/commons/ConfirmDialog';
 import { HomePage } from './pages/HomePage';
 import { NewTransactionPage } from './pages/wallet/NewTransactionPage';
+import { CategoriesPage } from './pages/categories/CategoriesPage';
+import * as PrimitiveTooltip from '@radix-ui/react-tooltip';
 
 declare module '@tanstack/react-query' {
   interface Register {
@@ -55,7 +57,7 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  const { sessionIsSettled, startUpSession } = useSessionStore();
+  const { sessionIsSettled, startUpSession } = useSession();
 
   useEffect(() => {
     startUpSession();
@@ -65,17 +67,20 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Toaster richColors theme="dark" position="top-center" />
-      <Routes>
-        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-        <Route element={<Layout />}>
-          <Route path={ROUTES.HOME} element={<HomePage />} />
-          <Route path={ROUTES.WALLET.LIST} element={<WalletPage />} />
-          <Route path={ROUTES.WALLET.NEW} element={<NewTransactionPage />} />
-          <Route path={ROUTES.HOME} element={<WalletPage />} />
-        </Route>
-      </Routes>
-      <ConfirmDialog />
+      <PrimitiveTooltip.Provider delayDuration={300}>
+        <Toaster richColors position="bottom-left" />
+        <Routes>
+          <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+          <Route element={<Layout />}>
+            <Route path={ROUTES.HOME} element={<HomePage />} />
+            <Route path={ROUTES.WALLET.LIST} element={<WalletPage />} />
+            <Route path={ROUTES.WALLET.NEW} element={<NewTransactionPage />} />
+            <Route path={ROUTES.HOME} element={<WalletPage />} />
+            <Route path={ROUTES.CATEGORIES.LIST} element={<CategoriesPage />} />
+          </Route>
+        </Routes>
+        <ConfirmDialog />
+      </PrimitiveTooltip.Provider>
     </QueryClientProvider>
   );
 }

@@ -2,12 +2,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { Input } from '../../../components/commons/input/Input';
-import { Dialog } from '@radix-ui/react-dialog';
 import {
   DialogClose,
   DialogContent,
   DialogTitle,
   DialogTrigger,
+  Dialog,
+  DialogHeader,
 } from '../../../components/commons/Dialog';
 import { Button } from '../../../components/commons/Button';
 import { Textarea } from '../../../components/commons/Textarea';
@@ -15,6 +16,7 @@ import dayjs from 'dayjs';
 import type { FCC } from '../../../utils/types';
 import { MoneyInput } from '../../../components/commons/input/MoneyInput';
 import { formatCurrency } from '../../../utils/functions';
+import { Form } from '../../../components/commons/Form';
 
 interface Props {
   defaultValues?: Form;
@@ -40,7 +42,7 @@ const schema = z.object({
 
 type Form = z.infer<typeof schema>;
 
-export const SimpleExpenseDialog: FCC<Props> = ({
+export const AddSimpleExpenseDialog: FCC<Props> = ({
   defaultValues = initialDefaultValues,
   children,
   onSave,
@@ -52,6 +54,7 @@ export const SimpleExpenseDialog: FCC<Props> = ({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Form>({
     defaultValues: {
       name: defaultValues.name,
@@ -64,14 +67,18 @@ export const SimpleExpenseDialog: FCC<Props> = ({
 
   const onSubmit = (data: Form) => {
     onSave(data);
+    reset();
   };
 
   return (
     <Dialog open={isVisible} onOpenChange={onVisibleChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
-        <DialogTitle>Expense</DialogTitle>
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
+        <DialogHeader>
+          <DialogTitle>Expense</DialogTitle>
+        </DialogHeader>
+
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <label className="flex flex-col text-sm">
             <span data-error={errors.name?.message || '*'}>Name</span>
             <Input placeholder="Cinema ticket, Groceries..." {...register('name')} />
@@ -91,13 +98,13 @@ export const SimpleExpenseDialog: FCC<Props> = ({
 
           <div className="flex w-full gap-2">
             <DialogClose asChild>
-              <Button className="w-full" variant="ghost">
+              <Button className="w-full" variant="outlined">
                 Cancel
               </Button>
             </DialogClose>
             <Button className="w-full">{isLoading ? 'Saving...' : 'Save'}</Button>
           </div>
-        </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

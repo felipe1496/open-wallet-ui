@@ -19,7 +19,7 @@ const initialState: States = {
   onConfirm: () => {},
 };
 
-export const useConfirmStore = createStore<States & Actions>()((set) => ({
+export const useConfirm = createStore<States & Actions>()((set) => ({
   ...initialState,
   add: (title: string, description: string, onConfirm: () => void) => {
     set({ isVisible: true, title, description, onConfirm });

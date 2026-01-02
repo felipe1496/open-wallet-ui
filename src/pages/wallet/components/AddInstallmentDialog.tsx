@@ -1,8 +1,9 @@
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { Button } from '../../../components/commons/Button';
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '../../../components/commons/Dialog';
@@ -16,6 +17,10 @@ import { NumberInput } from '../../../components/commons/input/NumberInput';
 import { useCtx } from '../../../hooks/useCtx';
 import { formatCurrency } from '../../../utils/functions';
 import dayjs from 'dayjs';
+import { AsyncSelectCategory } from '../../../components/AsyncSelectCategory';
+import type { CategoriesService } from '../../../services/CategoriesService';
+import type { Option } from '../../../components/commons/select/AsyncSelect';
+import { Form } from '../../../components/commons/Form';
 
 interface Props {
   defaultValues?: {
@@ -39,11 +44,16 @@ const schema = z.object({
     .string()
     .refine((installments) => Number(installments) % 1 === 0, 'Installments must be an integer'),
   description: z.string().max(400, 'Description is too long').optional(),
+  category: z.any(),
 });
 
-type Form = z.infer<typeof schema>;
+type Form = Omit<z.infer<typeof schema>, 'category'> & {
+  category: Option<
+    Awaited<ReturnType<typeof CategoriesService.getCategories>>['data']['categories'][number]
+  > | null;
+};
 
-export const InstallmentDialog: FCC<Props> = ({
+export const AddInstallmentDialog: FCC<Props> = ({
   children,
   defaultValues,
   onSave,
@@ -52,7 +62,7 @@ export const InstallmentDialog: FCC<Props> = ({
   isLoading = false,
 }) => {
   const { period } = useCtx();
-  console.log(period.year, period.month, dayjs().day());
+
   const defaultValuesDefined = {
     name: defaultValues?.name || '',
     amount: defaultValues?.amount || 0,
@@ -66,6 +76,8 @@ export const InstallmentDialog: FCC<Props> = ({
     register,
     handleSubmit,
     formState: { errors },
+    control,
+    reset,
   } = useForm<Form>({
     defaultValues: {
       name: defaultValuesDefined.name,
@@ -73,20 +85,24 @@ export const InstallmentDialog: FCC<Props> = ({
       installments: defaultValuesDefined.installments.toString(),
       date: defaultValuesDefined.date,
       description: defaultValuesDefined.description,
+      category: null,
     },
     resolver: zodResolver(schema),
   });
 
   const onSubmit = (data: Form) => {
     onSave(data);
+    reset();
   };
 
   return (
     <Dialog open={isVisible} onOpenChange={onVisibleChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
-        <DialogTitle>Installment</DialogTitle>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
+        <DialogHeader>
+          <DialogTitle>Installment</DialogTitle>
+        </DialogHeader>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex w-full flex-col gap-3">
             <label className="flex flex-col text-sm">
               <span data-error={errors.name?.message || '*'}>Name</span>
@@ -101,7 +117,17 @@ export const InstallmentDialog: FCC<Props> = ({
               <NumberInput {...register('installments')} />
             </label>
             <label className="flex flex-col text-sm">
-              <span data-error={errors.date?.message || '*'}>Period</span>
+              <span data-error={errors.category?.message}>Category</span>
+              <Controller
+                control={control}
+                name="category"
+                render={({ field: { onChange, value } }) => (
+                  <AsyncSelectCategory onChange={onChange} selected={value} />
+                )}
+              />
+            </label>
+            <label className="flex flex-col text-sm">
+              <span data-error={errors.date?.message || '*'}>Date</span>
               <Input type="date" {...register('date')} />
             </label>
             <label className="flex flex-col text-sm">
@@ -111,12 +137,12 @@ export const InstallmentDialog: FCC<Props> = ({
           </div>
 
           <div className="flex w-full gap-2">
-            <Button variant="ghost" className="w-full">
+            <Button className="w-full" variant="outlined">
               Cancel
             </Button>
             <Button className="w-full">{isLoading ? 'Saving...' : 'Save'}</Button>
           </div>
-        </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

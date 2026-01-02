@@ -3,16 +3,17 @@ import { Button } from '../../components/commons/Button';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { LINKS } from '../../constants/links';
 import { env } from '../../utils/functions';
-import { useSessionStore } from '../../stores/useSessionStore';
+import { useSession } from '../../hooks/useSession';
 import { ROUTES } from '../../constants/routes';
 import { toast } from 'sonner';
 import { usePostLoginGoogle } from '../../hooks/mutations/usePostLoginGoogle';
 import { Page } from '../../components/commons/Page';
+import { Card } from '../../components/commons/Card';
 
 export const LoginPage: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const googleCallback = searchParams.get('code');
-  const { login, sessionUser } = useSessionStore();
+  const { login, sessionUser } = useSession();
   const navigate = useNavigate();
 
   const { mutate: loginGoogle, isPending: loginGoogleIsPending } = usePostLoginGoogle({
@@ -41,8 +42,8 @@ export const LoginPage: FC = () => {
   return (
     <Page>
       <main className="flex h-screen w-full items-center justify-center">
-        <div className="flex w-full max-w-96 flex-col rounded-md bg-zinc-950 p-4">
-          <h1 className="font-title text-2xl font-bold">Welcome to Money</h1>
+        <Card className="w-full max-w-96">
+          <h1 className="text-xl font-medium">Welcome to Money</h1>
           <p className="text-sm text-zinc-400">Log in with your favorite provider</p>
 
           <Link
@@ -60,7 +61,7 @@ export const LoginPage: FC = () => {
           <p className="mt-6 text-center text-sm text-zinc-400">
             By continuing, you agree to money's Terms of Service and Privacy Policy.
           </p>
-        </div>
+        </Card>
       </main>
     </Page>
   );

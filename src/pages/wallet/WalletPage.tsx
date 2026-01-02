@@ -1,23 +1,41 @@
-import { type FC } from 'react';
+import { Suspense, type FC } from 'react';
 import { Button } from '../../components/commons/Button';
-import { Link, useLocation } from 'react-router';
 import { ROUTES } from '../../constants/routes';
-import { WalletList } from './components/WalletList';
 import { Page } from '../../components/commons/Page';
 
+import { PeriodPickerCustom } from '../../components/commons/PeriodPickerCustom';
+import { MONTHS_FULL } from '../../constants/dates';
+import { EntriesList } from './components/EntriesList';
+import { usePeriod } from '../../hooks/usePeriod';
+import { Zelda } from '../../components/commons/Zelda';
+
 export const WalletPage: FC = () => {
-  const { search } = useLocation();
+  const { period, setPeriod } = usePeriod();
 
   return (
     <Page>
-      <main className="px-8 py-16">
-        <h1 className="font-title mb-4 text-2xl font-bold">Wallet</h1>
+      <main className="p-2">
+        <header className="mb-4 flex w-full items-center justify-between">
+          <h1 className="text-xl font-medium">Wallet</h1>
 
-        <Button asChild className="mb-4">
-          <Link to={{ pathname: ROUTES.WALLET.NEW, search }}>New Transaction</Link>
-        </Button>
+          <div className="flex items-center gap-2">
+            <PeriodPickerCustom value={period} onChange={setPeriod} align="center">
+              <Button variant="outlined" className="font-normal">
+                {`${MONTHS_FULL[period.month]} ${period.year}`}
+              </Button>
+            </PeriodPickerCustom>
 
-        <WalletList />
+            <Button asChild>
+              <Zelda to={ROUTES.WALLET.NEW} keepQueryParams>
+                Add Transaction
+              </Zelda>
+            </Button>
+          </div>
+        </header>
+
+        <Suspense fallback={<div>Loading...</div>}>
+          <EntriesList />
+        </Suspense>
       </main>
     </Page>
   );

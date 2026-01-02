@@ -1,13 +1,10 @@
-import { TransactionsService } from '../services/transactions-service';
+import { TransactionsService } from '../services/TransactionsService';
 import type { QueryOpts } from '../utils/types';
 
 export const entriesKeys = {
-  all: () => ['entries'],
-  getEntries: (period: string, queryOpts?: QueryOpts) => [
-    ...entriesKeys.all(),
-    { period },
-    { queryOpts },
-  ],
+  all: () => ['entries'] as const,
+  getEntries: (period: string, queryOpts?: QueryOpts) =>
+    [...entriesKeys.all(), { period }, { queryOpts }] as const,
 };
 
 export function getEntriesQueryOpts(period: string, queryOpts?: QueryOpts) {

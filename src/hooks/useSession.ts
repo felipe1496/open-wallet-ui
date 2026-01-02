@@ -17,7 +17,7 @@ const initialState: States = {
   sessionIsSettled: false,
 };
 
-export const useSessionStore = createStore<States & Actions>()((set) => ({
+export const useSession = createStore<States & Actions>()((set) => ({
   ...initialState,
   login: (user: SessionUser, accessToken?: string) => {
     if (accessToken) {

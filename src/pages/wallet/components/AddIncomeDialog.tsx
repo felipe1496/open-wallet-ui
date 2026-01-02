@@ -6,6 +6,7 @@ import { Dialog } from '@radix-ui/react-dialog';
 import {
   DialogClose,
   DialogContent,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '../../../components/commons/Dialog';
@@ -15,6 +16,7 @@ import dayjs from 'dayjs';
 import type { FCC } from '../../../utils/types';
 import { MoneyInput } from '../../../components/commons/input/MoneyInput';
 import { formatCurrency } from '../../../utils/functions';
+import { Form } from '../../../components/commons/Form';
 
 interface Props {
   defaultValues?: {
@@ -45,7 +47,7 @@ const schema = z.object({
 
 type Form = z.infer<typeof schema>;
 
-export const IncomeDialog: FCC<Props> = ({
+export const AddIncomeDialog: FCC<Props> = ({
   defaultValues = initialDefaultValues,
   children,
   onSave,
@@ -57,6 +59,7 @@ export const IncomeDialog: FCC<Props> = ({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<Form>({
     defaultValues: {
       name: defaultValues.name,
@@ -69,14 +72,17 @@ export const IncomeDialog: FCC<Props> = ({
 
   const onSubmit = (data: Form) => {
     onSave(data);
+    reset();
   };
 
   return (
     <Dialog open={isVisible} onOpenChange={onVisibleChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
-        <DialogTitle>Income</DialogTitle>
-        <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
+        <DialogHeader>
+          <DialogTitle>Income</DialogTitle>
+        </DialogHeader>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <label className="flex flex-col text-sm">
             <span data-error={errors.name?.message || '*'}>Name</span>
             <Input placeholder="Cinema ticket, Groceries..." {...register('name')} />
@@ -96,13 +102,13 @@ export const IncomeDialog: FCC<Props> = ({
 
           <div className="flex w-full gap-2">
             <DialogClose asChild>
-              <Button className="w-full" variant="ghost">
+              <Button className="w-full" variant="outlined">
                 Cancel
               </Button>
             </DialogClose>
             <Button className="w-full">{isLoading ? 'Saving...' : 'Save'}</Button>
           </div>
-        </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

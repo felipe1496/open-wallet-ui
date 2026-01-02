@@ -22,6 +22,7 @@ export type QueryOpts = {
   per_page?: number;
   order_by?: string;
   order?: 'asc' | 'desc';
+  [key: string]: unknown;
 };
 
 export type SessionUser = {

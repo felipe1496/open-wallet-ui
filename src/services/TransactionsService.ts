@@ -1,15 +1,15 @@
-import { API } from '../api/API';
+import { client } from './client';
 import type { QueryOpts } from '../utils/types';
 
 export const TransactionsService = {
   async getEntries(period: string, queryOpts?: QueryOpts) {
-    const response = await API.get<{
+    const response = await client.get<{
       data: {
         entries: {
           id: string;
           transaction_id: string;
           name: string;
-          descriptions?: string | null;
+          description?: string | null;
           amount: number;
           period: string;
           user_id: string;
@@ -19,6 +19,9 @@ export const TransactionsService = {
           total_installments: number;
           created_at: string;
           reference_date: string;
+          category_id?: string | null;
+          category_name?: string | null;
+          category_color?: string | null;
         }[];
       };
       query: {
@@ -40,11 +43,12 @@ export const TransactionsService = {
     reference_date: string;
     description?: string | null;
   }) {
-    const response = await API.post<{
+    const response = await client.post<{
       data: {
         entry: {
           id: string;
           transaction_id: string;
+          name: string;
           description?: string | null;
           amount: number;
           period: string;
@@ -53,7 +57,11 @@ export const TransactionsService = {
           total_amount: number;
           installment: number;
           total_installments: number;
-          due_date: string;
+          created_at: string;
+          reference_date: string;
+          category_id?: string | null;
+          category_name?: string | null;
+          category_color?: string | null;
         };
       };
     }>('/v1/transactions/simple-expense', payload);
@@ -61,7 +69,7 @@ export const TransactionsService = {
     return response.data;
   },
   async deleteTransaction(id: string) {
-    await API.delete(`/v1/transactions/${id}`);
+    await client.delete(`/v1/transactions/${id}`);
   },
 
   async postIncome(payload: {
@@ -70,11 +78,12 @@ export const TransactionsService = {
     reference_date: string;
     description?: string | null;
   }) {
-    const response = await API.post<{
+    const response = await client.post<{
       data: {
         entry: {
           id: string;
           transaction_id: string;
+          name: string;
           description?: string | null;
           amount: number;
           period: string;
@@ -83,6 +92,11 @@ export const TransactionsService = {
           total_amount: number;
           installment: number;
           total_installments: number;
+          created_at: string;
+          reference_date: string;
+          category_id?: string | null;
+          category_name?: string | null;
+          category_color?: string | null;
         };
       };
     }>('/v1/transactions/income', payload);
@@ -95,12 +109,14 @@ export const TransactionsService = {
     total_amount: number;
     total_installments: number;
     reference_date: string;
+    category_id?: string | null;
   }) {
-    const response = await API.post<{
+    const response = await client.post<{
       data: {
         entries: {
           id: string;
           transaction_id: string;
+          name: string;
           description?: string | null;
           amount: number;
           period: string;
@@ -109,6 +125,11 @@ export const TransactionsService = {
           total_amount: number;
           installment: number;
           total_installments: number;
+          created_at: string;
+          reference_date: string;
+          category_id?: string | null;
+          category_name?: string | null;
+          category_color?: string | null;
         }[];
       };
     }>('/v1/transactions/installment', payload);

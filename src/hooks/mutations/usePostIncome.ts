@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import type { MutationOpts } from '../../utils/types';
-import { TransactionsService } from '../../services/transactions-service';
+import { TransactionsService } from '../../services/TransactionsService';
 
 export function usePostIncome({
   mutationKey = [],

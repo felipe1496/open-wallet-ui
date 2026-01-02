@@ -2,32 +2,31 @@
 
 @layer base {
   :root {
-    --page-height: calc(100vh - 4rem);
     --color-primary: #927bff;
     --color-secondary: #00eec8;
     --color-muted: #27272a;
-    --color-foreground: #fafafa;
+    --color-foreground: oklch(27.4% 0.006 286.033);
     --color-muted-foreground: #71717a;
     --skeleton: 220 15% 18%;
     --skeleton-highlight: 220 15% 28%;
+    --rx-dp-trigger: var(--radix-dropdown-menu-trigger-width);
   }
 }
 
 @theme {
-  --font-title: 'DM Serif Text', Georgia, 'Times New Roman', serif;
   --font-text: 'Rubik', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --color-primary: var(--color-primary);
   --color-secondary: var(--color-secondary);
   --color-muted: var(--color-muted);
   --color-foreground: var(--color-foreground);
   --color-muted-foreground: var(--color-muted-foreground);
-  --spacing-page: var(--page-height);
   --skeleton: 220 15% 18%;
   --skeleton-highlight: 220 15% 25%;
+  --spacing-rx-dp-trigger: var(--rx-dp-trigger);
 }
 
 body {
-  @apply font-text bg-zinc-800 text-zinc-50;
+  @apply font-text text-foreground bg-zinc-100;
 }
 
 span[data-error]::after {

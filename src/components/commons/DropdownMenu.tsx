@@ -10,7 +10,7 @@ export const DropdownMenuContent: FC<ComponentProps<typeof PrimitiveDropdownMenu
 }) => (
   <PrimitiveDropdownMenu.Portal>
     <PrimitiveDropdownMenu.Content
-      className={cn('rounded-lg bg-zinc-950 shadow-md', className)}
+      className={cn('rounded border border-zinc-300 bg-zinc-50 shadow-md', className)}
       {...props}
     />
   </PrimitiveDropdownMenu.Portal>
@@ -21,7 +21,7 @@ export const DropdownMenuItem: FC<ComponentProps<typeof PrimitiveDropdownMenu.It
   ...props
 }) => (
   <PrimitiveDropdownMenu.Item
-    className={cn('cursor-pointer rounded-lg p-2 transition-all hover:bg-zinc-900', className)}
+    className={cn('cursor-pointer rounded p-2 transition-all hover:bg-zinc-900', className)}
     {...props}
   />
 );

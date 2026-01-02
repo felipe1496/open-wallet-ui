@@ -16,7 +16,7 @@ interface Props<T> {
   getRowProps?: (row: T) => HTMLAttributes<HTMLTableRowElement>;
 }
 
-export const DataTable = <T,>({ columns, data, isLoading = true, getRowProps }: Props<T>) => {
+export const DataTable = <T,>({ columns, data, isLoading = false, getRowProps }: Props<T>) => {
   function renderRows() {
     if (isLoading) {
       return Array.from({ length: 10 }).map((_, rowIndex) => (

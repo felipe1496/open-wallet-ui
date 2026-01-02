@@ -44,14 +44,14 @@ export const PeriodPickerCustom: FC<PeriodPickerCustomProps> = ({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent className="w-[280px] border border-zinc-700 bg-zinc-800 p-0" align={align}>
+      <PopoverContent className="w-[280px] border border-zinc-300 bg-white p-0" align={align}>
         <div className="p-4">
           <div className="mb-4 flex items-center justify-between">
             <button
               onClick={handlePreviousYear}
               disabled={displayYear <= minYear}
               className={cn(
-                'text-foreground flex h-8 w-8 items-center justify-center rounded-md transition-colors',
+                'text-foreground flex h-8 w-8 cursor-pointer items-center justify-center rounded transition-colors',
                 'hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50',
               )}
             >
@@ -62,7 +62,7 @@ export const PeriodPickerCustom: FC<PeriodPickerCustomProps> = ({
               onClick={handleNextYear}
               disabled={displayYear >= maxYear}
               className={cn(
-                'flex h-8 w-8 cursor-pointer items-center justify-center rounded-md transition-colors',
+                'flex h-8 w-8 cursor-pointer items-center justify-center rounded transition-colors',
                 'hover:bg-primary disabled:cursor-not-allowed disabled:opacity-50',
               )}
             >
@@ -80,10 +80,10 @@ export const PeriodPickerCustom: FC<PeriodPickerCustomProps> = ({
                 <button
                   key={month}
                   className={cn(
-                    'h-10 cursor-pointer rounded-md text-sm font-medium transition-all',
+                    'h-10 cursor-pointer rounded text-sm font-medium transition-all',
                     isSelected
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-foreground hover:bg-primary',
+                      ? 'bg-primary text-white'
+                      : 'text-foreground hover:bg-primary hover:text-white',
                     !isSelected && isCurrentMonth && 'border-primary/50 border',
                   )}
                   onClick={() => handleMonthSelect(index)}

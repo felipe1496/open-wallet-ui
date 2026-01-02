@@ -1,4 +1,4 @@
-import { SEO } from '../../constants/SEO';
+import { SEO } from '../../constants/seo';
 import type { FCC } from '../../utils/types';
 
 interface Props {
