@@ -70,14 +70,7 @@ export const AddInstallmentDialog: FCC<Props> = ({
     control,
     reset,
   } = useForm<Form>({
-    defaultValues: {
-      name: defaultValues.name,
-      amount: defaultValues.amount,
-      installments: defaultValues.installments.toString(),
-      date: defaultValues.date,
-      description: defaultValues.description,
-      category: null,
-    },
+    defaultValues,
     resolver: zodResolver(schema),
   });
 

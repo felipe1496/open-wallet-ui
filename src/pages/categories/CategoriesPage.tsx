@@ -18,7 +18,7 @@ export const CategoriesPage: FC = () => {
     meta: {
       successNotification: 'Category created successfully',
       errorNotification: 'There was an error creating the category',
-      invalidateQuery: [...categoriesKeys.all()],
+      invalidateQuery: [categoriesKeys.all()],
     },
   });
 

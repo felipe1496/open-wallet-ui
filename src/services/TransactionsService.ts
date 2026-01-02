@@ -42,6 +42,7 @@ export const TransactionsService = {
     amount: number;
     reference_date: string;
     description?: string | null;
+    category_id?: string | null;
   }) {
     const response = await client.post<{
       data: {
@@ -77,6 +78,7 @@ export const TransactionsService = {
     amount: number;
     reference_date: string;
     description?: string | null;
+    category_id?: string | null;
   }) {
     const response = await client.post<{
       data: {

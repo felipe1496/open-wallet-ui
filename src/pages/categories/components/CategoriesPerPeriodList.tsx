@@ -15,6 +15,7 @@ import { usePeriod } from '../../../hooks/usePeriod';
 import { SaveCategoryDialog } from './SaveCategoryDialog';
 import { usePatchCategory } from '../../../hooks/mutations/usePatchCategory';
 import { useState, type ComponentProps } from 'react';
+import { entriesKeys } from '../../../queries/transactions-queries';
 
 export const CategoriesPerPeriodList = () => {
   const [isEditing, setIsEditing] = useState<{
@@ -31,7 +32,10 @@ export const CategoriesPerPeriodList = () => {
   });
 
   const { data: categoriesData } = useSuspenseQuery({
-    ...getCategoriesQueryOpts(),
+    ...getCategoriesQueryOpts({
+      order_by: 'name',
+      order: 'asc',
+    }),
   });
 
   const categories = categoriesData.data.categories.map((category) => {
@@ -48,7 +52,7 @@ export const CategoriesPerPeriodList = () => {
     meta: {
       successNotification: 'Category deleted successfully',
       errorNotification: 'There was an error deleting the category',
-      invalidateQuery: [...categoriesKeys.all()],
+      invalidateQuery: [categoriesKeys.all(), entriesKeys.all()],
     },
   });
 
@@ -56,7 +60,7 @@ export const CategoriesPerPeriodList = () => {
     meta: {
       successNotification: 'Category updated successfully',
       errorNotification: 'There was an error updating the category',
-      invalidateQuery: [...categoriesKeys.all()],
+      invalidateQuery: [categoriesKeys.all()],
     },
   });
 

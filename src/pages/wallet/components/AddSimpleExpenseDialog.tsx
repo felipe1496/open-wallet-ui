@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import { Input } from '../../../components/commons/input/Input';
 import {
@@ -17,6 +17,7 @@ import type { FCC } from '../../../utils/types';
 import { MoneyInput } from '../../../components/commons/input/MoneyInput';
 import { formatCurrency } from '../../../utils/functions';
 import { Form } from '../../../components/commons/Form';
+import { AsyncSelectCategory } from '../../../components/AsyncSelectCategory';
 
 interface Props {
   defaultValues?: Form;
@@ -26,11 +27,12 @@ interface Props {
   onVisibleChange?: (visible: boolean) => void;
 }
 
-const initialDefaultValues = {
+const initialDefaultValues: Form = {
   name: '',
   amount: formatCurrency(0),
   date: dayjs().format('YYYY-MM-DD'),
   description: '',
+  category: null,
 };
 
 const schema = z.object({
@@ -38,6 +40,7 @@ const schema = z.object({
   amount: z.string(),
   date: z.string().refine((date) => dayjs(date, 'YYYY-MM-DD').isValid(), 'Invalid date'),
   description: z.string().max(400, 'Description is too long').optional(),
+  category: z.any(),
 });
 
 type Form = z.infer<typeof schema>;
@@ -55,13 +58,9 @@ export const AddSimpleExpenseDialog: FCC<Props> = ({
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm<Form>({
-    defaultValues: {
-      name: defaultValues.name,
-      amount: defaultValues.amount.toString(),
-      date: dayjs(defaultValues.date).format('YYYY-MM-DD'),
-      description: defaultValues.description,
-    },
+    defaultValues,
     resolver: zodResolver(schema),
   });
 
@@ -86,6 +85,16 @@ export const AddSimpleExpenseDialog: FCC<Props> = ({
           <label className="flex flex-col text-sm">
             <span data-error={errors.amount?.message || '*'}>Amount</span>
             <MoneyInput {...register('amount')} minValue={0} maxValue={999999} />
+          </label>
+          <label className="flex flex-col text-sm">
+            <span data-error={errors.category?.message}>Category</span>
+            <Controller
+              control={control}
+              name="category"
+              render={({ field: { onChange, value } }) => (
+                <AsyncSelectCategory onChange={onChange} selected={value} />
+              )}
+            />
           </label>
           <label className="flex flex-col text-sm">
             <span data-error={errors.date?.message || '*'}>Date</span>

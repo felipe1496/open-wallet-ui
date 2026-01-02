@@ -29,7 +29,7 @@ export const NewTransactionPage: FC = () => {
       meta: {
         successNotification: 'Transaction created successfully',
         errorNotification: 'There was an error creating the transaction',
-        invalidateQuery: [...entriesKeys.all()],
+        invalidateQuery: [entriesKeys.all()],
       },
     },
   );
@@ -42,7 +42,7 @@ export const NewTransactionPage: FC = () => {
     meta: {
       successNotification: 'Transaction created successfully',
       errorNotification: 'There was an error creating the transaction',
-      invalidateQuery: [...entriesKeys.all()],
+      invalidateQuery: [entriesKeys.all()],
     },
   });
 
@@ -54,7 +54,7 @@ export const NewTransactionPage: FC = () => {
     meta: {
       successNotification: 'Transaction created successfully',
       errorNotification: 'There was an error creating the transaction',
-      invalidateQuery: [...entriesKeys.all()],
+      invalidateQuery: [entriesKeys.all()],
     },
   });
 
@@ -79,6 +79,7 @@ export const NewTransactionPage: FC = () => {
                   name: data.name,
                   reference_date: dayjs(data.date).toISOString(),
                   description: data.description,
+                  category_id: data.category?.id,
                 });
               }}
               isLoading={isPostSimpleExpensePending}
@@ -105,6 +106,7 @@ export const NewTransactionPage: FC = () => {
                   name: data.name,
                   reference_date: dayjs(data.date).toISOString(),
                   description: data.description,
+                  category_id: data.category?.id,
                 });
               }}
               isLoading={isPostIncomePending}

@@ -21,7 +21,7 @@ import * as PrimitiveTooltip from '@radix-ui/react-tooltip';
 declare module '@tanstack/react-query' {
   interface Register {
     mutationMeta: {
-      invalidateQuery?: QueryKey;
+      invalidateQuery?: QueryKey[];
       successNotification?: string;
       errorNotification?: string;
     };
@@ -42,9 +42,9 @@ const queryClient = new QueryClient({
     },
     onSettled: (_data, _error, _variables, _context, mutation) => {
       if (mutation.meta?.invalidateQuery) {
-        queryClient.invalidateQueries({
-          queryKey: mutation.meta.invalidateQuery,
-        });
+        for (const queryKey of mutation.meta.invalidateQuery) {
+          queryClient.invalidateQueries({ queryKey });
+        }
       }
     },
   }),
