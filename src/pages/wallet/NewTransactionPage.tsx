@@ -9,7 +9,6 @@ import { usePostInstallment } from '../../hooks/mutations/usePostInstallment';
 import { Card } from '../../components/commons/Card';
 import { BanknoteArrowDownIcon, BanknoteArrowUpIcon, SquareDivideIcon } from 'lucide-react';
 import { parseUSD } from '../../utils/functions';
-import dayjs from 'dayjs';
 import { SaveSimpleExpenseDialog } from './components/SaveSimpleExpenseDialog';
 import { SaveIncomeDialog } from './components/SaveIncomeDialog';
 import { SaveInstallmentDialog } from './components/SaveInstallmentDialog';
@@ -77,7 +76,7 @@ export const NewTransactionPage: FC = () => {
                 postSimpleExpense({
                   amount: parseUSD(data.amount),
                   name: data.name,
-                  reference_date: dayjs(data.date).toISOString(),
+                  reference_date: data.date,
                   description: data.description,
                   category_id: data.category?.id,
                 });
@@ -104,7 +103,7 @@ export const NewTransactionPage: FC = () => {
                 postIncome({
                   amount: parseUSD(data.amount),
                   name: data.name,
-                  reference_date: dayjs(data.date).toISOString(),
+                  reference_date: data.date,
                   description: data.description,
                   category_id: data.category?.id,
                 });
@@ -132,7 +131,7 @@ export const NewTransactionPage: FC = () => {
                   name: data.name,
                   total_amount: parseUSD(data.amount),
                   total_installments: Number(data.installments),
-                  reference_date: dayjs(data.date).toISOString(),
+                  reference_date: data.date,
                   description: data.description,
                   category_id: data.category?.id,
                 });

@@ -220,7 +220,7 @@ export const EntriesList: FC = () => {
                 name: data.name,
                 description: data.description,
                 amount: parseUSD(data.amount),
-                reference_date: dayjs(data.date).toISOString(),
+                reference_date: data.date,
                 category_id: data.category?.id,
               },
             });
