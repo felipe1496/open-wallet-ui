@@ -55,7 +55,7 @@ const initialDefaultValues: Form = {
   category: null,
 };
 
-export const AddInstallmentDialog: FCC<Props> = ({
+export const SaveInstallmentDialog: FCC<Props> = ({
   children,
   defaultValues = initialDefaultValues,
   onSave,

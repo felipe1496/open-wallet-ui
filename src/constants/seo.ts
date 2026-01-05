@@ -1,4 +1,4 @@
 export const SEO = {
-  APPLICATION_NAME: 'Money',
-  DEFAULT_PAGE_DESCRIPTION: 'A simple app to manage your finances',
+  APPLICATION_NAME: 'Open Wallet',
+  DEFAULT_PAGE_DESCRIPTION: 'A open source app to manage your finances',
 };

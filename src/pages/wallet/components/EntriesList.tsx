@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import { useState, type ComponentProps, type FC } from 'react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { entriesKeys, getEntriesQueryOpts } from '../../../queries/transactions-queries';
 import dayjs from 'dayjs';
@@ -6,22 +6,42 @@ import type { TransactionsService } from '../../../services/TransactionsService'
 import { useConfirm } from '../../../hooks/useConfirm';
 import { useDeleteTransaction } from '../../../hooks/mutations/useDeleteTransaction';
 import { Card } from '../../../components/commons/Card';
-import { cn } from '../../../utils/functions';
+import { cn, formatCurrency, parseUSD } from '../../../utils/functions';
 import { Button } from '../../../components/commons/Button';
-import { TrashIcon } from 'lucide-react';
+import { SquarePenIcon, TrashIcon } from 'lucide-react';
 import { Link } from 'react-router';
 import { ROUTES } from '../../../constants/routes';
 import { usePeriod } from '../../../hooks/usePeriod';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../../components/commons/Tooltip';
+import type { SaveIncomeDialog } from './SaveIncomeDialog';
+import { SaveSimpleExpenseDialog } from './SaveSimpleExpenseDialog';
+import { usePatchSimpleExpense } from '../../../hooks/mutations/usePatchSimpleExpense';
 
 export const EntriesList: FC = () => {
-  const { period } = usePeriod();
   const [isDeleting, setIsDeleting] = useState<string>('');
+  const [isEditingExpense, setIsEditingExpense] = useState<{
+    id: string;
+    defaultValues: NonNullable<ComponentProps<typeof SaveIncomeDialog>['defaultValues']>;
+  } | null>(null);
+  const { period } = usePeriod();
   const confirm = useConfirm();
+
+  const { mutate: patchSimpleExpense, isPending: isSimpleExpensePending } = usePatchSimpleExpense({
+    onSuccess: () => {
+      setIsEditingExpense(null);
+    },
+    meta: {
+      successNotification: 'Category updated successfully',
+      errorNotification: 'There was an error updating the category',
+      invalidateQuery: [entriesKeys.all()],
+    },
+  });
 
   const { data } = useSuspenseQuery({
     ...getEntriesQueryOpts(dayjs().year(period.year).month(period.month).format('YYYYMM'), {
       per_page: 999,
+      order_by: 'reference_date',
+      order: 'asc',
     }),
     select: (data) => {
       const entriesPerDate: Record<
@@ -50,7 +70,7 @@ export const EntriesList: FC = () => {
     meta: {
       successNotification: 'Transaction deleted successfully',
       errorNotification: 'An error occurred while deleting the transaction',
-      invalidateQuery: [...entriesKeys.all()],
+      invalidateQuery: [entriesKeys.all()],
     },
   });
 
@@ -110,19 +130,64 @@ export const EntriesList: FC = () => {
                       )}
                     </td>
                     <td className="w-[5%] px-3 py-1 text-right">
-                      <Button
-                        size="sm"
-                        variant="outlined"
-                        onClick={() =>
-                          confirm.add(
-                            'Delete Transaction',
-                            'This action will delete this entry and all other entries related to it. Are you sure? This action cannot be undone.',
-                            () => deleteTransaction(entry.transaction_id),
-                          )
-                        }
-                      >
-                        <TrashIcon className="size-4" />
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <Button
+                          size="sm"
+                          variant="outlined"
+                          onClick={() => {
+                            switch (entry.type) {
+                              case 'simple_expense': {
+                                const defaultValues = {
+                                  name: entry.name,
+                                  amount: formatCurrency(Math.abs(entry.amount)),
+                                  description: entry.description || '',
+                                  date: entry.reference_date.substring(0, 10),
+                                  category: null,
+                                };
+                                if (entry.category_id) {
+                                  Object.assign(defaultValues, {
+                                    category: {
+                                      id: entry.category_id,
+                                      value: {
+                                        id: entry.category_id,
+                                        name: entry.category_name,
+                                        color: entry.category_color,
+                                      },
+                                      label: entry.category_name,
+                                    },
+                                  });
+                                }
+                                setIsEditingExpense({
+                                  id: entry.transaction_id,
+                                  defaultValues,
+                                });
+                                break;
+                              }
+                              case 'income':
+                                break;
+                              case 'installment':
+                                break;
+                              default:
+                                break;
+                            }
+                          }}
+                        >
+                          <SquarePenIcon className="size-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outlined"
+                          onClick={() =>
+                            confirm.add(
+                              'Delete Transaction',
+                              'This action will delete this entry and all other entries related to it. Are you sure? This action cannot be undone.',
+                              () => deleteTransaction(entry.transaction_id),
+                            )
+                          }
+                        >
+                          <TrashIcon className="size-4" />
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 )),
@@ -141,6 +206,26 @@ export const EntriesList: FC = () => {
             <Link to={{ pathname: ROUTES.WALLET.NEW }}>Add Transaction</Link>
           </Button>
         </div>
+      )}
+      {isEditingExpense && (
+        <SaveSimpleExpenseDialog
+          isLoading={isSimpleExpensePending}
+          isVisible={!!isEditingExpense}
+          onVisibleChange={() => setIsEditingExpense(null)}
+          defaultValues={isEditingExpense?.defaultValues}
+          onSave={(data) => {
+            patchSimpleExpense({
+              id: isEditingExpense.id,
+              payload: {
+                name: data.name,
+                description: data.description,
+                amount: parseUSD(data.amount),
+                reference_date: dayjs(data.date).toISOString(),
+                category_id: data.category?.id,
+              },
+            });
+          }}
+        />
       )}
     </Card>
   );

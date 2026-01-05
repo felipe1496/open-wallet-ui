@@ -2,13 +2,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import { Input } from '../../../components/commons/input/Input';
-import { Dialog } from '@radix-ui/react-dialog';
 import {
   DialogClose,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Dialog,
+  DialogHeader,
 } from '../../../components/commons/Dialog';
 import { Button } from '../../../components/commons/Button';
 import { Textarea } from '../../../components/commons/Textarea';
@@ -22,9 +22,9 @@ import { AsyncSelectCategory } from '../../../components/AsyncSelectCategory';
 interface Props {
   defaultValues?: Form;
   onSave: (data: Form) => void;
+  isLoading?: boolean;
   isVisible?: boolean;
   onVisibleChange?: (visible: boolean) => void;
-  isLoading?: boolean;
 }
 
 const initialDefaultValues: Form = {
@@ -45,14 +45,15 @@ const schema = z.object({
 
 type Form = z.infer<typeof schema>;
 
-export const AddIncomeDialog: FCC<Props> = ({
+export const SaveSimpleExpenseDialog: FCC<Props> = ({
   defaultValues = initialDefaultValues,
   children,
   onSave,
+  isLoading = false,
   isVisible,
   onVisibleChange,
-  isLoading = false,
 }) => {
+  console.log('defaultValues: ', defaultValues);
   const {
     register,
     handleSubmit,
@@ -74,8 +75,9 @@ export const AddIncomeDialog: FCC<Props> = ({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Income</DialogTitle>
+          <DialogTitle>Expense</DialogTitle>
         </DialogHeader>
+
         <Form onSubmit={handleSubmit(onSubmit)}>
           <label className="flex flex-col text-sm">
             <span data-error={errors.name?.message || '*'}>Name</span>

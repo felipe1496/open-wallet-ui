@@ -10,9 +10,9 @@ import { Card } from '../../components/commons/Card';
 import { BanknoteArrowDownIcon, BanknoteArrowUpIcon, SquareDivideIcon } from 'lucide-react';
 import { parseUSD } from '../../utils/functions';
 import dayjs from 'dayjs';
-import { AddSimpleExpenseDialog } from './components/AddSimpleExpenseDialog';
-import { AddIncomeDialog } from './components/AddIncomeDialog';
-import { AddInstallmentDialog } from './components/AddInstallmentDialog';
+import { SaveSimpleExpenseDialog } from './components/SaveSimpleExpenseDialog';
+import { SaveIncomeDialog } from './components/SaveIncomeDialog';
+import { SaveInstallmentDialog } from './components/SaveInstallmentDialog';
 
 export const NewTransactionPage: FC = () => {
   const [simpleExpenseIsVisible, setSimpleExpenseIsVisible] = useState(false);
@@ -70,7 +70,7 @@ export const NewTransactionPage: FC = () => {
           className="flex items-center justify-center"
         >
           <div className="grid grid-cols-2 gap-4">
-            <AddSimpleExpenseDialog
+            <SaveSimpleExpenseDialog
               isVisible={simpleExpenseIsVisible}
               onVisibleChange={setSimpleExpenseIsVisible}
               onSave={(data) => {
@@ -95,9 +95,9 @@ export const NewTransactionPage: FC = () => {
                   Suitable for one-time simple expenses on your day.
                 </p>
               </button>
-            </AddSimpleExpenseDialog>
+            </SaveSimpleExpenseDialog>
 
-            <AddIncomeDialog
+            <SaveIncomeDialog
               isVisible={incomeIsVisible}
               onVisibleChange={setIncomeIsVisible}
               onSave={(data) => {
@@ -122,9 +122,9 @@ export const NewTransactionPage: FC = () => {
                   Suitable for one-time simple incomes on your day.
                 </p>
               </button>
-            </AddIncomeDialog>
+            </SaveIncomeDialog>
 
-            <AddInstallmentDialog
+            <SaveInstallmentDialog
               isVisible={installmentIsVisible}
               onVisibleChange={setInstallmentIsVisible}
               onSave={(data) => {
@@ -150,7 +150,7 @@ export const NewTransactionPage: FC = () => {
                   Suitable for monthly installments, such as rent, utilities, etc.
                 </p>
               </button>
-            </AddInstallmentDialog>
+            </SaveInstallmentDialog>
           </div>
         </Card>
       </main>
