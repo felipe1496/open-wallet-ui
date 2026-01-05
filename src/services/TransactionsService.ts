@@ -172,4 +172,39 @@ export const TransactionsService = {
 
     return response.data;
   },
+
+  async patchIncome({
+    id,
+    payload,
+  }: {
+    id: string;
+    payload: {
+      name?: string;
+      description?: string;
+      amount?: number;
+      reference_date?: string;
+      category_id?: string;
+    };
+  }) {
+    const response = await client.patch<{
+      id: string;
+      transaction_id: string;
+      name: string;
+      description: string | null;
+      amount: number;
+      period: string;
+      user_id: string;
+      type: string;
+      total_amount: number;
+      installment: number;
+      total_installments: number;
+      created_at: string;
+      reference_date: string;
+      category_id?: string | null;
+      category_name?: string | null;
+      category_color?: string | null;
+    }>(`/v1/transactions/income/${id}`, payload);
+
+    return response.data;
+  },
 };

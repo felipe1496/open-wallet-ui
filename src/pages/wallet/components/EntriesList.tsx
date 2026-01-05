@@ -13,13 +13,18 @@ import { Link } from 'react-router';
 import { ROUTES } from '../../../constants/routes';
 import { usePeriod } from '../../../hooks/usePeriod';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../../components/commons/Tooltip';
-import type { SaveIncomeDialog } from './SaveIncomeDialog';
+import { SaveIncomeDialog } from './SaveIncomeDialog';
 import { SaveSimpleExpenseDialog } from './SaveSimpleExpenseDialog';
 import { usePatchSimpleExpense } from '../../../hooks/mutations/usePatchSimpleExpense';
+import { usePatchIncome } from '../../../hooks/mutations/usePatchIncome';
 
 export const EntriesList: FC = () => {
   const [isDeleting, setIsDeleting] = useState<string>('');
   const [isEditingExpense, setIsEditingExpense] = useState<{
+    id: string;
+    defaultValues: NonNullable<ComponentProps<typeof SaveSimpleExpenseDialog>['defaultValues']>;
+  } | null>(null);
+  const [isEditingIncome, setIsEditingIncome] = useState<{
     id: string;
     defaultValues: NonNullable<ComponentProps<typeof SaveIncomeDialog>['defaultValues']>;
   } | null>(null);
@@ -31,8 +36,19 @@ export const EntriesList: FC = () => {
       setIsEditingExpense(null);
     },
     meta: {
-      successNotification: 'Category updated successfully',
-      errorNotification: 'There was an error updating the category',
+      successNotification: 'Transaction updated successfully',
+      errorNotification: 'There was an error updating the transaction',
+      invalidateQuery: [entriesKeys.all()],
+    },
+  });
+
+  const { mutate: patchIncome, isPending: isIncomePending } = usePatchIncome({
+    onSuccess: () => {
+      setIsEditingIncome(null);
+    },
+    meta: {
+      successNotification: 'Transaction updated successfully',
+      errorNotification: 'There was an error updating the transaction',
       invalidateQuery: [entriesKeys.all()],
     },
   });
@@ -163,8 +179,33 @@ export const EntriesList: FC = () => {
                                 });
                                 break;
                               }
-                              case 'income':
+                              case 'income': {
+                                const defaultValues = {
+                                  name: entry.name,
+                                  amount: formatCurrency(Math.abs(entry.amount)),
+                                  description: entry.description || '',
+                                  date: entry.reference_date.substring(0, 10),
+                                  category: null,
+                                };
+                                if (entry.category_id) {
+                                  Object.assign(defaultValues, {
+                                    category: {
+                                      id: entry.category_id,
+                                      value: {
+                                        id: entry.category_id,
+                                        name: entry.category_name,
+                                        color: entry.category_color,
+                                      },
+                                      label: entry.category_name,
+                                    },
+                                  });
+                                }
+                                setIsEditingIncome({
+                                  id: entry.transaction_id,
+                                  defaultValues,
+                                });
                                 break;
+                              }
                               case 'installment':
                                 break;
                               default:
@@ -216,6 +257,26 @@ export const EntriesList: FC = () => {
           onSave={(data) => {
             patchSimpleExpense({
               id: isEditingExpense.id,
+              payload: {
+                name: data.name,
+                description: data.description,
+                amount: parseUSD(data.amount),
+                reference_date: data.date,
+                category_id: data.category?.id,
+              },
+            });
+          }}
+        />
+      )}
+      {isEditingIncome && (
+        <SaveIncomeDialog
+          isLoading={isIncomePending}
+          isVisible={!!isEditingIncome}
+          onVisibleChange={() => setIsEditingIncome(null)}
+          defaultValues={isEditingIncome?.defaultValues}
+          onSave={(data) => {
+            patchIncome({
+              id: isEditingIncome.id,
               payload: {
                 name: data.name,
                 description: data.description,
