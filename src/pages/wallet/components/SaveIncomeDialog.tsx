@@ -23,7 +23,7 @@ interface Props {
   defaultValues?: Form;
   onSave: (data: Form) => void;
   isVisible?: boolean;
-  onVisibleChange?: (visible: boolean) => void;
+  onClose?: () => void;
   isLoading?: boolean;
 }
 
@@ -50,7 +50,7 @@ export const SaveIncomeDialog: FCC<Props> = ({
   children,
   onSave,
   isVisible,
-  onVisibleChange,
+  onClose,
   isLoading = false,
 }) => {
   const {
@@ -70,7 +70,7 @@ export const SaveIncomeDialog: FCC<Props> = ({
   };
 
   return (
-    <Dialog open={isVisible} onOpenChange={onVisibleChange}>
+    <Dialog open={isVisible} onOpenChange={onClose}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>

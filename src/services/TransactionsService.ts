@@ -207,4 +207,48 @@ export const TransactionsService = {
 
     return response.data;
   },
+  async patchInstallment({
+    entry_id,
+    transaction_id,
+    payload,
+    scope,
+  }: {
+    entry_id: string;
+    transaction_id: string;
+    scope?: string;
+    payload: {
+      amount?: number;
+      description?: string;
+      category_id?: string;
+      name?: string;
+    };
+  }) {
+    const response = await client.patch<{
+      data: {
+        entries: {
+          id: string;
+          transaction_id: string;
+          name: string;
+          description: string | null;
+          amount: number;
+          period: string;
+          user_id: string;
+          type: string;
+          total_amount: number;
+          installment: number;
+          total_installments: number;
+          created_at: string;
+          reference_date: string;
+          category_id?: string | null;
+          category_name?: string | null;
+          category_color?: string | null;
+        }[];
+      };
+    }>(
+      `/v1/transactions/installment/${transaction_id}/entry/${entry_id}${scope ? `?scope=${scope}` : ''}`,
+      payload,
+    );
+
+    return response.data;
+  },
 };

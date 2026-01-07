@@ -42,7 +42,7 @@ export const LoginPage: FC = () => {
   return (
     <Page>
       <main className="flex h-screen w-full items-center justify-center">
-        <Card className="w-full max-w-96">
+        <Card wrapperClassName="w-full max-w-96">
           <h1 className="text-xl font-medium">Welcome to Money</h1>
           <p className="text-sm text-zinc-400">Log in with your favorite provider</p>
 

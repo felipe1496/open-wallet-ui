@@ -71,7 +71,7 @@ export const NewTransactionPage: FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <SaveSimpleExpenseDialog
               isVisible={simpleExpenseIsVisible}
-              onVisibleChange={setSimpleExpenseIsVisible}
+              onClose={() => setSimpleExpenseIsVisible(false)}
               onSave={(data) => {
                 postSimpleExpense({
                   amount: parseUSD(data.amount),
@@ -82,23 +82,26 @@ export const NewTransactionPage: FC = () => {
                 });
               }}
               isLoading={isPostSimpleExpensePending}
+            />
+
+            <button
+              onClick={() => setSimpleExpenseIsVisible(true)}
+              className="flex h-28 w-full max-w-2xs cursor-pointer flex-col gap-4 rounded border border-red-200 bg-red-50 p-2 text-left shadow"
             >
-              <button className="flex h-28 w-full max-w-2xs cursor-pointer flex-col gap-4 rounded border border-red-200 bg-red-50 p-2 text-left shadow">
-                <div className="flex items-center gap-2">
-                  <BanknoteArrowDownIcon strokeWidth={1.5} className="size-7 text-red-500" />
+              <div className="flex items-center gap-2">
+                <BanknoteArrowDownIcon strokeWidth={1.5} className="size-7 text-red-500" />
 
-                  <h3 className="font-medium">Expense</h3>
-                </div>
+                <h3 className="font-medium">Expense</h3>
+              </div>
 
-                <p className="text-muted-foreground text-sm">
-                  Suitable for one-time simple expenses on your day.
-                </p>
-              </button>
-            </SaveSimpleExpenseDialog>
+              <p className="text-muted-foreground text-sm">
+                Suitable for one-time simple expenses on your day.
+              </p>
+            </button>
 
             <SaveIncomeDialog
               isVisible={incomeIsVisible}
-              onVisibleChange={setIncomeIsVisible}
+              onClose={() => setIncomeIsVisible(false)}
               onSave={(data) => {
                 postIncome({
                   amount: parseUSD(data.amount),
@@ -109,23 +112,25 @@ export const NewTransactionPage: FC = () => {
                 });
               }}
               isLoading={isPostIncomePending}
+            />
+            <button
+              onClick={() => setIncomeIsVisible(true)}
+              className="flex h-28 w-full max-w-2xs cursor-pointer flex-col gap-4 rounded border border-green-200 bg-green-50 p-2 text-left shadow"
             >
-              <button className="flex h-28 w-full max-w-2xs cursor-pointer flex-col gap-4 rounded border border-green-200 bg-green-50 p-2 text-left shadow">
-                <div className="flex items-center gap-2">
-                  <BanknoteArrowUpIcon strokeWidth={1.5} className="size-7 text-green-500" />
+              <div className="flex items-center gap-2">
+                <BanknoteArrowUpIcon strokeWidth={1.5} className="size-7 text-green-500" />
 
-                  <h3 className="font-medium">Income</h3>
-                </div>
+                <h3 className="font-medium">Income</h3>
+              </div>
 
-                <p className="text-muted-foreground text-sm">
-                  Suitable for one-time simple incomes on your day.
-                </p>
-              </button>
-            </SaveIncomeDialog>
+              <p className="text-muted-foreground text-sm">
+                Suitable for one-time simple incomes on your day.
+              </p>
+            </button>
 
             <SaveInstallmentDialog
               isVisible={installmentIsVisible}
-              onVisibleChange={setInstallmentIsVisible}
+              onClose={() => setInstallmentIsVisible(false)}
               onSave={(data) => {
                 postInstallment({
                   name: data.name,
@@ -137,19 +142,21 @@ export const NewTransactionPage: FC = () => {
                 });
               }}
               isLoading={isPostInstallmentPending}
+            />
+            <button
+              onClick={() => setInstallmentIsVisible(true)}
+              className="flex h-28 w-full max-w-2xs cursor-pointer flex-col gap-4 rounded border border-amber-200 bg-amber-50 p-2 text-left shadow"
             >
-              <button className="flex h-28 w-full max-w-2xs cursor-pointer flex-col gap-4 rounded border border-amber-200 bg-amber-50 p-2 text-left shadow">
-                <div className="flex items-center gap-2">
-                  <SquareDivideIcon strokeWidth={1.5} className="size-6 text-amber-500" />
+              <div className="flex items-center gap-2">
+                <SquareDivideIcon strokeWidth={1.5} className="size-6 text-amber-500" />
 
-                  <h3 className="font-medium">Installment</h3>
-                </div>
+                <h3 className="font-medium">Installment</h3>
+              </div>
 
-                <p className="text-muted-foreground text-sm">
-                  Suitable for monthly installments, such as rent, utilities, etc.
-                </p>
-              </button>
-            </SaveInstallmentDialog>
+              <p className="text-muted-foreground text-sm">
+                Suitable for monthly installments, such as rent, utilities, etc.
+              </p>
+            </button>
           </div>
         </Card>
       </main>

@@ -33,8 +33,8 @@ export const CategoriesPerPeriodList = () => {
 
   const { data: categoriesData } = useSuspenseQuery({
     ...getCategoriesQueryOpts({
-      order_by: 'name',
-      order: 'asc',
+      order_by: 'created_at',
+      order: 'desc',
     }),
   });
 

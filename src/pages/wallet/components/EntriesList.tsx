@@ -28,6 +28,13 @@ export const EntriesList: FC = () => {
     id: string;
     defaultValues: NonNullable<ComponentProps<typeof SaveIncomeDialog>['defaultValues']>;
   } | null>(null);
+  /* const [isEditingInstallment, setIsEditingInstallment] = useState<{
+    transaction_id: string;
+    entry_id: string;
+    scope: (typeof INSTANCE)[keyof typeof INSTANCE];
+    step: number;
+    defaultValues: NonNullable<ComponentProps<typeof EditInstallmentDialog>['defaultValues']>;
+  } | null>(null); */
   const { period } = usePeriod();
   const confirm = useConfirm();
 
@@ -90,6 +97,17 @@ export const EntriesList: FC = () => {
     },
   });
 
+  /* const { mutate: patchInstallment } = usePatchInstallment({
+    onSettled: () => {
+      setIsEditingInstallment(null);
+    },
+    meta: {
+      successNotification: 'Transaction updated successfully',
+      errorNotification: 'There was an error updating the transaction',
+      invalidateQuery: [entriesKeys.all()],
+    },
+  }); */
+
   const entries = Object.entries(data);
 
   return (
@@ -148,6 +166,8 @@ export const EntriesList: FC = () => {
                     <td className="w-[5%] px-3 py-1 text-right">
                       <div className="flex items-center gap-2">
                         <Button
+                          title="Not available for installments"
+                          disabled={entry.type === 'installment'}
                           size="sm"
                           variant="outlined"
                           onClick={() => {
@@ -206,8 +226,37 @@ export const EntriesList: FC = () => {
                                 });
                                 break;
                               }
-                              case 'installment':
+                              case 'installment': {
+                                /* const defaultValues = {
+                                  name: entry.name,
+                                  amount: formatCurrency(Math.abs(entry.amount)),
+                                  description: entry.description || '',
+                                  category: null,
+                                };
+
+                                if (entry.category_id) {
+                                  Object.assign(defaultValues, {
+                                    category: {
+                                      id: entry.category_id,
+                                      value: {
+                                        id: entry.category_id,
+                                        name: entry.category_name,
+                                        color: entry.category_color,
+                                      },
+                                      label: entry.category_name,
+                                    },
+                                  });
+                                }
+
+                                setIsEditingInstallment({
+                                  transaction_id: entry.transaction_id,
+                                  entry_id: entry.id,
+                                  scope: INSTANCE.THIS_ONE,
+                                  step: 0,
+                                  defaultValues,
+                                }); */
                                 break;
+                              }
                               default:
                                 break;
                             }
@@ -252,7 +301,7 @@ export const EntriesList: FC = () => {
         <SaveSimpleExpenseDialog
           isLoading={isSimpleExpensePending}
           isVisible={!!isEditingExpense}
-          onVisibleChange={() => setIsEditingExpense(null)}
+          onClose={() => setIsEditingExpense(null)}
           defaultValues={isEditingExpense?.defaultValues}
           onSave={(data) => {
             patchSimpleExpense({
@@ -272,7 +321,7 @@ export const EntriesList: FC = () => {
         <SaveIncomeDialog
           isLoading={isIncomePending}
           isVisible={!!isEditingIncome}
-          onVisibleChange={() => setIsEditingIncome(null)}
+          onClose={() => setIsEditingIncome(null)}
           defaultValues={isEditingIncome?.defaultValues}
           onSave={(data) => {
             patchIncome({
@@ -288,6 +337,32 @@ export const EntriesList: FC = () => {
           }}
         />
       )}
+      {/* isEditingInstallment && isEditingInstallment.step === 0 && (
+        <InstanceSelectDialog
+          isVisible={isEditingInstallment && isEditingInstallment.step === 0}
+          onClose={() => setIsEditingInstallment(null)}
+          title="Edit Installment"
+          onChange={(scope) => {
+            setIsEditingInstallment((prev) => {
+              if (!prev) return null;
+              return {
+                ...prev,
+                scope,
+              };
+            });
+          }}
+          onConfirm={() => {
+            setIsEditingInstallment((prev) => {
+              if (!prev) return null;
+              return {
+                ...prev,
+                step: 1,
+              };
+            });
+          }}
+          value={isEditingInstallment?.scope}
+        />
+      ) */}
     </Card>
   );
 };
