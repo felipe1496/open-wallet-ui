@@ -36,6 +36,15 @@ export const LoginPage: FC = () => {
     }
   }, [googleCallback, loginGoogle, navigate, sessionUser, setSearchParams]);
 
+  useEffect(() => {
+    const logoutMessage = sessionStorage.getItem('logout_message');
+
+    if (logoutMessage) {
+      toast.error(logoutMessage);
+      sessionStorage.removeItem('logout_message');
+    }
+  }, []);
+
   if (sessionUser) {
     return null;
   }
