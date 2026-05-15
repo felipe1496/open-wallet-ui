@@ -59,19 +59,6 @@ export const SaveCategoryDialog: FCC<Props> = ({
     onSave(data, { reset });
   }
 
-  const DEFAULT_COLORS = [
-    '#fb2c36',
-    '#ff6900',
-    '#efb100',
-    '#7ccf00',
-    '#00c951',
-    '#00bba7',
-    '#2b7fff',
-    '#ad46ff',
-    '#ec4899',
-    '#f43f5e',
-  ];
-
   return (
     <Dialog open={isVisible} onOpenChange={onVisibleChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
@@ -98,7 +85,18 @@ export const SaveCategoryDialog: FCC<Props> = ({
                 return (
                   <ColorPalette
                     color={value || ''}
-                    defaultColors={DEFAULT_COLORS}
+                    defaultColors={[
+                      '#fb2c36',
+                      '#ff6900',
+                      '#efb100',
+                      '#7ccf00',
+                      '#00c951',
+                      '#00bba7',
+                      '#2b7fff',
+                      '#ad46ff',
+                      '#ec4899',
+                      '#f43f5e',
+                    ]}
                     onChange={onChange}
                   />
                 );
