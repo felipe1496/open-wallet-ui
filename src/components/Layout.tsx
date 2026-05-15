@@ -14,8 +14,14 @@ export const Layout: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const logoutMessage = sessionStorage.getItem('logout_message');
+    if (logoutMessage) {
+      window.location.replace(ROUTES.LOGIN);
+      return;
+    }
+
     if (!sessionUser) {
-      navigate(ROUTES.LOGIN);
+      navigate(ROUTES.LOGIN, { replace: true });
     }
   }, [sessionUser, navigate]);
 
