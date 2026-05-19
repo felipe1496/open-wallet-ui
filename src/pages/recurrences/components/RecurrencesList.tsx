@@ -94,15 +94,18 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
           {recurrencesData.length > 0 ? (
             <DataTable
               data={recurrencesData}
+              groupBy={(row) => `Day ${row.day_of_month}`}
               columns={[
                 {
                   id: 'name',
                   title: 'Name',
+                  trClassName: 'text-left',
                   render: (row) => <span>{row.name}</span>,
                 },
                 {
                   id: 'amount',
                   title: 'Amount',
+                  trClassName: 'text-center',
                   render: (row) => (
                     <span className="font-semibold text-red-400">
                       {Intl.NumberFormat('en-US', {
@@ -113,13 +116,9 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
                   ),
                 },
                 {
-                  id: 'day_of_month',
-                  title: 'Day',
-                  render: (row) => <span>{row.day_of_month}</span>,
-                },
-                {
                   id: 'start_period',
                   title: 'Period',
+                  trClassName: 'text-center',
                   render: (row) => (
                     <div className="flex flex-col text-zinc-500">
                       {row.start_period} {row.end_period ? `- ${row.end_period}` : ''}
@@ -129,12 +128,13 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
                 {
                   id: 'note',
                   title: 'Note',
+                  trClassName: 'text-right',
                   render: (row) => <span>{row.note}</span>,
                 },
                 {
                   id: 'actions',
                   title: '',
-                  trClassName: 'text-right',
+                  trClassName: 'w-[1%] whitespace-nowrap',
                   render: (row) => (
                     <div className="flex items-center justify-end gap-2">
                       <Button
