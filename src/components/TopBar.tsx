@@ -11,7 +11,7 @@ import {
 import { cn } from '../utils/functions';
 import { Avatar, AvatarFallback, AvatarImage } from './commons/Avatar';
 import { useSession } from '../hooks/useSession';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { ROUTES } from '../constants/routes';
 import { MENU } from '../constants/menu';
 import { Zelda } from './commons/Zelda';
@@ -21,6 +21,7 @@ export const TopBar: FC = () => {
   const logout = useSession((state) => state.logout);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   return (
     <header className="fixed top-0 z-10 flex h-14 w-screen items-center justify-between border-b border-zinc-300 bg-white px-1 shadow-sm md:hidden">
