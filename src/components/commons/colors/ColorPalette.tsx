@@ -54,12 +54,12 @@ export const ColorPalette: FCC<Props> = ({ color, defaultColors, onChange }) => 
         <ColorCircle color={customColor}>
           {selectedColorId === 'CUSTOM' ? (
             customColor ? (
-              <CheckIcon className="size-4 text-white" />
+              <CheckIcon className="pointer-events-none size-4 text-white" />
             ) : (
-              <CheckIcon className="text-muted-foreground size-4" />
+              <CheckIcon className="text-muted-foreground pointer-events-none size-4" />
             )
           ) : (
-            <PlusIcon className="text-muted-foreground size-3" />
+            <PlusIcon className="text-muted-foreground pointer-events-none size-3" />
           )}
         </ColorCircle>
       </ColorPicker>

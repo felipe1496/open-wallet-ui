@@ -63,6 +63,7 @@ const initialDefaultValues: FormType = {
 
 interface Props {
   defaultValues?: FormType;
+  children?: React.ReactElement;
   isLoading?: boolean;
   onSave: (data: FormType, extras: { reset: () => void }) => void;
   isVisible?: boolean;
@@ -94,7 +95,7 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
 
   return (
     <Dialog open={isVisible} onOpenChange={onVisibleChange}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {children && <DialogTrigger render={children} />}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{defaultValues.name ? 'Edit Recurrence' : 'Add Recurrence'}</DialogTitle>
@@ -197,17 +198,19 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
           </label>
 
           <div className="mt-4 flex w-full gap-2">
-            <DialogClose asChild>
-              <Button
-                type="button"
-                className="w-full"
-                variant="outlined"
-                disabled={isLoading}
-                onClick={() => reset()}
-              >
-                Cancel
-              </Button>
-            </DialogClose>
+            <DialogClose
+              render={
+                <Button
+                  type="button"
+                  className="w-full"
+                  variant="outlined"
+                  disabled={isLoading}
+                  onClick={() => reset()}
+                >
+                  Cancel
+                </Button>
+              }
+            />
             <Button className="w-full" disabled={isLoading}>
               {isLoading ? <Spinner variant="secondary" /> : 'Save'}
             </Button>

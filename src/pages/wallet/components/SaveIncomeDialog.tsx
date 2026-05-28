@@ -2,8 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import z from 'zod';
 import { Input } from '../../../components/commons/input/Input';
-import { Dialog } from '@radix-ui/react-dialog';
 import {
+  Dialog,
   DialogClose,
   DialogContent,
   DialogHeader,
@@ -22,6 +22,7 @@ import { Spinner } from '../../../components/commons/loader/Spinner';
 
 interface Props {
   defaultValues?: Partial<Form>;
+  children?: React.ReactElement;
   onSave: (data: Form, { reset }: { reset: () => void }) => void;
   isVisible?: boolean;
   onClose?: () => void;
@@ -71,7 +72,7 @@ export const SaveIncomeDialog: FCC<Props> = ({
 
   return (
     <Dialog open={isVisible} onOpenChange={onClose}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {children && <DialogTrigger render={children} />}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Income</DialogTitle>
@@ -105,11 +106,13 @@ export const SaveIncomeDialog: FCC<Props> = ({
           </label>
 
           <div className="flex w-full gap-2">
-            <DialogClose asChild>
-              <Button className="w-full" variant="outlined" disabled={isLoading}>
-                Cancel
-              </Button>
-            </DialogClose>
+            <DialogClose
+              render={
+                <Button className="w-full" variant="outlined" disabled={isLoading}>
+                  Cancel
+                </Button>
+              }
+            />
             <Button className="w-full" disabled={isLoading}>
               {isLoading ? <Spinner variant="secondary" /> : 'Save'}
             </Button>

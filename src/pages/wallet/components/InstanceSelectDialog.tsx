@@ -1,6 +1,6 @@
-import { Dialog } from '@radix-ui/react-dialog';
 import type { FC, ReactNode } from 'react';
 import {
+  Dialog,
   DialogClose,
   DialogContent,
   DialogHeader,
@@ -53,11 +53,13 @@ export const InstanceSelectDialog: FC<Props> = ({
           </Radio>
 
           <div className="mt-4 flex justify-end gap-2">
-            <DialogClose asChild>
-              <Button variant="outlined" type="button">
-                Cancel
-              </Button>
-            </DialogClose>
+            <DialogClose
+              render={
+                <Button variant="outlined" type="button">
+                  Cancel
+                </Button>
+              }
+            />
             <Button>Confirm</Button>
           </div>
         </form>

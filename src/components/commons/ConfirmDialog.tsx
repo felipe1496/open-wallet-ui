@@ -1,6 +1,5 @@
-import { Dialog } from '@radix-ui/react-dialog';
 import type { FC } from 'react';
-import { DialogContent, DialogHeader, DialogTitle } from './Dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './Dialog';
 import { Button } from './Button';
 import { useConfirm } from '../../hooks/useConfirm';
 

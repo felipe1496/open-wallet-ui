@@ -16,6 +16,7 @@
     "check:api-up-to-date": "npx swagger-typescript-api generate -p https://raw.githubusercontent.com/felipe1496/open-wallet/main/docs/swagger.json -o ./src/api -n api.tmp.ts --fetch --module-name-first-tag && npx prettier --write ./src/api/api.tmp.ts && diff ./src/api/api.ts ./src/api/api.tmp.ts && rm ./src/api/api.tmp.ts"
   },
   "dependencies": {
+    "@base-ui/react": "^1.5.0",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -27,8 +28,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/vite": "^4.1.17",
     "@tanstack/react-query": "^5.90.12",
-    "@uiw/react-color-chrome": "^2.10.1",
-    "@uiw/react-color-github": "^2.10.1",
+    "@uiw/react-color-chrome": "^2.10.3",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "dayjs": "^1.11.19",
