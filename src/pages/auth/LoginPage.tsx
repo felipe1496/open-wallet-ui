@@ -2,7 +2,7 @@ import { useEffect, type FC } from 'react';
 import { Button } from '../../components/commons/Button';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { LINKS } from '../../constants/links';
-import { env } from '../../utils/functions';
+import { cn, env } from '../../utils/functions';
 import { useSession } from '../../hooks/useSession';
 import type { SessionUser } from '../../utils/types';
 import { ROUTES } from '../../constants/routes';
@@ -56,17 +56,25 @@ export const LoginPage: FC = () => {
           <h1 className="text-xl font-medium">Welcome to Money</h1>
           <p className="text-sm text-zinc-400">Log in with your favorite provider</p>
 
-          <Link
-            to={LINKS.GOOGLE_AUTH.replace(':client_id', env().GOOGLE_CLIENT_ID).replace(
-              ':redirect_uri',
-              env().GOOGLE_AUTH_REDIRECT_URI,
-            )}
+          <Button
+            aria-disabled={loginGoogleIsPending}
+            tabIndex={loginGoogleIsPending ? -1 : undefined}
+            className={cn('mt-6', loginGoogleIsPending && 'pointer-events-none opacity-50')}
+            variant="outlined"
+            size="wide"
+            nativeButton={false}
+            render={
+              <Link
+                to={LINKS.GOOGLE_AUTH.replace(':client_id', env().GOOGLE_CLIENT_ID).replace(
+                  ':redirect_uri',
+                  env().GOOGLE_AUTH_REDIRECT_URI,
+                )}
+              />
+            }
           >
-            <Button disabled={loginGoogleIsPending} className="mt-6" variant="outlined" size="wide">
-              <img src="/google_48.webp" alt="google icon" className="size-4" />
-              Continue with Google
-            </Button>
-          </Link>
+            <img src="/google_48.webp" alt="google icon" className="size-4" />
+            Continue with Google
+          </Button>
 
           <p className="mt-6 text-center text-sm text-zinc-400">
             By continuing, you agree to money's Terms of Service and Privacy Policy.

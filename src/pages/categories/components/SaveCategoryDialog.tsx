@@ -107,13 +107,11 @@ export const SaveCategoryDialog: FCC<Props> = ({
 
           <div className="flex w-full gap-2">
             <DialogClose
-              render={
-                <Button className="w-full" variant="outlined" disabled={isLoading}>
-                  Cancel
-                </Button>
-              }
-            />
-            <Button className="w-full" disabled={isLoading}>
+              render={<Button className="w-full" variant="outlined" disabled={isLoading} />}
+            >
+              Cancel
+            </DialogClose>
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? <Spinner variant="secondary" /> : 'Save'}
             </Button>
           </div>

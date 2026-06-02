@@ -53,14 +53,8 @@ export const InstanceSelectDialog: FC<Props> = ({
           </Radio>
 
           <div className="mt-4 flex justify-end gap-2">
-            <DialogClose
-              render={
-                <Button variant="outlined" type="button">
-                  Cancel
-                </Button>
-              }
-            />
-            <Button>Confirm</Button>
+            <DialogClose render={<Button variant="outlined" type="button" />}>Cancel</DialogClose>
+            <Button type="submit">Confirm</Button>
           </div>
         </form>
       </DialogContent>

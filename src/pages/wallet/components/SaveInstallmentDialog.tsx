@@ -203,14 +203,12 @@ export const SaveInstallmentDialog: FCC<Props> = ({
             </div>
 
             <div className="flex w-full gap-2">
-              <DialogClose
-                render={
-                  <Button className="w-full" variant="outlined">
-                    Cancel
-                  </Button>
-                }
-              />
-              <Button className="w-full">Next</Button>
+              <DialogClose render={<Button className="w-full" variant="outlined" />}>
+                Cancel
+              </DialogClose>
+              <Button type="submit" className="w-full">
+                Next
+              </Button>
             </div>
           </Form>
         )}
@@ -236,7 +234,7 @@ export const SaveInstallmentDialog: FCC<Props> = ({
               >
                 Back
               </Button>
-              <Button className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? <Spinner variant="secondary" /> : 'Save'}
               </Button>
             </div>

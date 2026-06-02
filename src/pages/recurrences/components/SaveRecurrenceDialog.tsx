@@ -206,12 +206,12 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
                   variant="outlined"
                   disabled={isLoading}
                   onClick={() => reset()}
-                >
-                  Cancel
-                </Button>
+                />
               }
-            />
-            <Button className="w-full" disabled={isLoading}>
+            >
+              Cancel
+            </DialogClose>
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? <Spinner variant="secondary" /> : 'Save'}
             </Button>
           </div>

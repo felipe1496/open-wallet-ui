@@ -1,6 +1,6 @@
-import type { ButtonHTMLAttributes, FC } from 'react';
+import type { FC } from 'react';
 import { cn } from '../../utils/functions';
-import { Slot } from '@radix-ui/react-slot';
+import { mergeProps, useRender } from '@base-ui/react';
 
 const variants = {
   primary:
@@ -17,30 +17,33 @@ const sizes = {
   wide: 'w-full h-12 py-2 font-medium text-sm',
 };
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props extends useRender.ComponentProps<'button'> {
   variant?: keyof typeof variants;
   size?: keyof typeof sizes;
-  asChild?: boolean;
+  nativeButton?: boolean;
 }
 
 export const Button: FC<Props> = ({
   variant = 'primary',
   size = 'md',
-  asChild,
+  nativeButton = true,
+  render,
   className,
   ...props
 }) => {
-  const Element = asChild ? Slot : 'button';
+  const defaultProps: useRender.ElementProps<'button'> = {
+    className: cn(
+      variants[variant],
+      sizes[size],
+      "inline-flex cursor-pointer items-center justify-center gap-2 rounded text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+      className,
+    ),
+    ...(nativeButton ? { type: 'button' } : {}),
+  };
 
-  return (
-    <Element
-      className={cn(
-        variants[variant],
-        sizes[size],
-        "inline-flex cursor-pointer items-center justify-center gap-2 rounded text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
-      {...props}
-    />
-  );
+  return useRender({
+    defaultTagName: 'button',
+    render,
+    props: mergeProps<'button'>(defaultProps, props),
+  });
 };

@@ -408,8 +408,13 @@ export const EntriesList: FC = () => {
             <span className="text-lg font-medium">No transactions yet</span>
             <span>Try adding one</span>
 
-            <Button className="mt-3" variant="outlined" asChild>
-              <Link to={{ pathname: ROUTES.WALLET.NEW_TRANSACTION }}>Add Transaction</Link>
+            <Button
+              className="mt-3"
+              variant="outlined"
+              nativeButton={false}
+              render={<Link to={{ pathname: ROUTES.WALLET.NEW_TRANSACTION }} />}
+            >
+              Add Transaction
             </Button>
           </div>
         )}
