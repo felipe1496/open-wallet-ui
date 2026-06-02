@@ -1,5 +1,5 @@
-import * as AvatarPrimitive from '@radix-ui/react-avatar';
+import * as AvatarPrimitive from '@base-ui/react/avatar';
 
-export const Avatar = AvatarPrimitive.Root;
-export const AvatarImage = AvatarPrimitive.Image;
-export const AvatarFallback = AvatarPrimitive.Fallback;
+export const Avatar = AvatarPrimitive.Avatar.Root;
+export const AvatarImage = AvatarPrimitive.Avatar.Image;
+export const AvatarFallback = AvatarPrimitive.Avatar.Fallback;
