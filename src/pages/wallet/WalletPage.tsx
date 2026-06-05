@@ -26,10 +26,11 @@ export const WalletPage: FC = () => {
               </Button>
             </PeriodPickerCustom>
 
-            <Button asChild>
-              <Zelda to={ROUTES.WALLET.NEW_TRANSACTION} keepQueryParams>
-                Add Transaction
-              </Zelda>
+            <Button
+              nativeButton={false}
+              render={<Zelda to={ROUTES.WALLET.NEW_TRANSACTION} keepQueryParams />}
+            >
+              Add Transaction
             </Button>
           </div>
         </header>

@@ -26,6 +26,7 @@ import { Spinner } from '../../../components/commons/loader/Spinner';
 
 interface Props {
   defaultValues?: Partial<Form>;
+  children?: React.ReactElement;
   previewDefaultValues?: PreviewForm;
   onSave: (data: Form & PreviewForm, { reset }: { reset: () => void }) => void;
   isVisible?: boolean;
@@ -158,7 +159,7 @@ export const SaveInstallmentDialog: FCC<Props> = ({
 
   return (
     <Dialog open={isVisible} onOpenChange={onClose}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {children && <DialogTrigger render={children} />}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
@@ -202,12 +203,12 @@ export const SaveInstallmentDialog: FCC<Props> = ({
             </div>
 
             <div className="flex w-full gap-2">
-              <DialogClose asChild>
-                <Button className="w-full" variant="outlined">
-                  Cancel
-                </Button>
+              <DialogClose render={<Button className="w-full" variant="outlined" />}>
+                Cancel
               </DialogClose>
-              <Button className="w-full">Next</Button>
+              <Button type="submit" className="w-full">
+                Next
+              </Button>
             </div>
           </Form>
         )}
@@ -233,7 +234,7 @@ export const SaveInstallmentDialog: FCC<Props> = ({
               >
                 Back
               </Button>
-              <Button className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? <Spinner variant="secondary" /> : 'Save'}
               </Button>
             </div>

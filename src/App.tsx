@@ -15,7 +15,7 @@ import { useSession } from './hooks/useSession';
 import { ConfirmDialog } from './components/commons/ConfirmDialog';
 import { NewTransactionPage } from './pages/wallet/NewTransactionPage';
 import { CategoriesPage } from './pages/categories/CategoriesPage';
-import * as PrimitiveTooltip from '@radix-ui/react-tooltip';
+import { Tooltip as PrimitiveTooltip } from '@base-ui/react/tooltip';
 import { DashboardPage } from './pages/dashboard/DashboardPage';
 import { RecurrencesPage } from './pages/recurrences/RecurrencesPage';
 import { DialogLoader } from './components/DialogLoader';
@@ -71,7 +71,7 @@ function App() {
   return (
     <ApiProvider>
       <QueryClientProvider client={queryClient}>
-        <PrimitiveTooltip.Provider delayDuration={300}>
+        <PrimitiveTooltip.Provider delay={300}>
           <Toaster richColors position="bottom-left" />
           <Routes>
             <Route path={ROUTES.LOGIN} element={<LoginPage />} />

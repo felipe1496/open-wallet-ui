@@ -30,6 +30,7 @@ const initialDeafultValues: Form = {
 
 interface Props {
   defaultValues?: Form;
+  children?: React.ReactElement;
   isLoading?: boolean;
   onSave: (data: Form, { reset }: { reset: () => void }) => void;
   isVisible?: boolean;
@@ -61,7 +62,7 @@ export const SaveCategoryDialog: FCC<Props> = ({
 
   return (
     <Dialog open={isVisible} onOpenChange={onVisibleChange}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+      {children && <DialogTrigger render={children} />}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Category</DialogTitle>
@@ -105,12 +106,12 @@ export const SaveCategoryDialog: FCC<Props> = ({
           </label>
 
           <div className="flex w-full gap-2">
-            <DialogClose asChild>
-              <Button className="w-full" variant="outlined" disabled={isLoading}>
-                Cancel
-              </Button>
+            <DialogClose
+              render={<Button className="w-full" variant="outlined" disabled={isLoading} />}
+            >
+              Cancel
             </DialogClose>
-            <Button className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? <Spinner variant="secondary" /> : 'Save'}
             </Button>
           </div>

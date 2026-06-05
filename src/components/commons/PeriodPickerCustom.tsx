@@ -7,7 +7,7 @@ import { MONTHS } from '../../constants/dates';
 interface PeriodPickerCustomProps {
   value?: { month: number; year: number };
   onChange?: (value: { month: number; year: number }) => void;
-  children: React.ReactNode;
+  children: React.ReactElement;
   minYear?: number;
   maxYear?: number;
   align?: 'start' | 'center' | 'end';
@@ -43,7 +43,7 @@ export const PeriodPickerCustom: FC<PeriodPickerCustomProps> = ({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
+      <PopoverTrigger render={children} />
       <PopoverContent className="w-[280px] border border-zinc-300 bg-white p-0" align={align}>
         <div className="p-4">
           <div className="mb-4 flex items-center justify-between">

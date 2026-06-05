@@ -9,7 +9,7 @@
     --color-muted-foreground: #71717a;
     --skeleton: 220 15% 18%;
     --skeleton-highlight: 220 15% 28%;
-    --rx-dp-trigger: var(--radix-dropdown-menu-trigger-width);
+    --rx-dp-trigger: var(--anchor-width);
   }
 }
 

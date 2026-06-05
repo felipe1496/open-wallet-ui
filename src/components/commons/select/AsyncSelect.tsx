@@ -51,60 +51,63 @@ export function AsyncSelect<T>({
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <div
-          role="combobox"
-          aria-expanded={open}
-          aria-disabled={disabled}
-          data-disabled={disabled ? '' : undefined}
-          tabIndex={disabled ? -1 : 0}
-          onPointerDown={(e) => disabled && e.preventDefault()}
-          onClick={(e) => disabled && e.preventDefault()}
-          onKeyDown={(e) => disabled && e.preventDefault()}
-          className={cn(
-            'flex h-10 w-full items-center justify-between rounded-md border border-zinc-300 px-2 text-sm',
-            disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
-            !selected && 'text-muted-foreground',
-            className,
-          )}
-        >
-          {selected ? selected.label : placeholder}
-          <div className="flex items-center gap-2">
-            <div
-              role="button"
-              tabIndex={disabled ? -1 : 0}
-              aria-label="Clear selection"
-              onKeyDown={(evt) => {
-                if (evt.key === 'Enter' || evt.key === ' ') {
+      <PopoverTrigger
+        nativeButton={false}
+        render={
+          <div
+            role="combobox"
+            aria-expanded={open}
+            aria-disabled={disabled}
+            data-disabled={disabled ? '' : undefined}
+            tabIndex={disabled ? -1 : 0}
+            onPointerDown={(e) => disabled && e.preventDefault()}
+            onClick={(e) => disabled && e.preventDefault()}
+            onKeyDown={(e) => disabled && e.preventDefault()}
+            className={cn(
+              'flex h-10 w-full items-center justify-between rounded-md border border-zinc-300 px-2 text-sm',
+              disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
+              !selected && 'text-muted-foreground',
+              className,
+            )}
+          >
+            {selected ? selected.label : placeholder}
+            <div className="flex items-center gap-2">
+              <div
+                role="button"
+                tabIndex={disabled ? -1 : 0}
+                aria-label="Clear selection"
+                onKeyDown={(evt) => {
+                  if (evt.key === 'Enter' || evt.key === ' ') {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    onSelectedChange?.(null);
+                  }
+                }}
+                onClick={(evt) => {
                   evt.preventDefault();
                   evt.stopPropagation();
                   onSelectedChange?.(null);
-                }
-              }}
-              onClick={(evt) => {
-                evt.preventDefault();
-                evt.stopPropagation();
-                onSelectedChange?.(null);
-              }}
-              className={cn(
-                'flex items-center justify-center rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-zinc-400',
-                disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
+                }}
+                className={cn(
+                  'flex items-center justify-center rounded-sm outline-none focus-visible:ring-2 focus-visible:ring-zinc-400',
+                  disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
+                )}
+              >
+                <XIcon className="size-4 text-zinc-400" />
+              </div>
+
+              <div className="h-5 w-px bg-zinc-300" />
+
+              {isLoading ? (
+                <LoaderCircleIcon className="text-muted-foreground size-4 animate-spin" />
+              ) : (
+                <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
               )}
-            >
-              <XIcon className="size-4 text-zinc-400" />
             </div>
-
-            <div className="h-5 w-px bg-zinc-300" />
-
-            {isLoading ? (
-              <LoaderCircleIcon className="text-muted-foreground size-4 animate-spin" />
-            ) : (
-              <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
-            )}
           </div>
-        </div>
-      </PopoverTrigger>
-      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+        }
+      />
+      <PopoverContent className="w-(--anchor-width) p-0" align="start">
         <Command>
           <div className="flex items-center border-b border-zinc-300 px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />

@@ -26,10 +26,10 @@ export const TopBar: FC = () => {
   return (
     <header className="fixed top-0 z-10 flex h-14 w-screen items-center justify-between border-b border-zinc-300 bg-white px-1 shadow-sm md:hidden">
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerTrigger asChild>
-          <Button className="size-10 rounded-full" size="sm" variant="ghost">
-            <PanelLeftIcon className="text-muted-foreground size-4" />
-          </Button>
+        <DrawerTrigger
+          render={<Button className="size-10 rounded-full" size="sm" variant="ghost" />}
+        >
+          <PanelLeftIcon className="text-muted-foreground size-4" />
         </DrawerTrigger>
         <DrawerContent className="p-4 pt-8">
           {MENU.ITEMS.map((item, idx) => (
