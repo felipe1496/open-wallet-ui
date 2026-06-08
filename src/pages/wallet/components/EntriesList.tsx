@@ -20,6 +20,7 @@ import { Spinner } from '../../../components/commons/loader/Spinner';
 
 import { useAPI } from '../../../hooks/useAPI';
 import type { Entry, ListEntriesResponse } from '../../../queries/transactions-queries';
+import { DataTable } from '../../../components/commons/DataTable';
 
 export const EntriesList: FC = () => {
   const api = useAPI();
@@ -83,21 +84,7 @@ export const EntriesList: FC = () => {
     getNextPageParam: (lastPage) => {
       return lastPage.query?.next_page ? (lastPage.query.page || 0) + 1 : undefined;
     },
-    select: (data) => {
-      const entries = data.pages.flatMap((page) => page.data?.entries || []);
-
-      const entriesPerDate: Record<string, Entry[]> = {};
-      entries.forEach((entry) => {
-        const date = entry.reference_date!.slice(0, 10);
-        if (!entriesPerDate[date]) {
-          entriesPerDate[date] = [entry as Entry];
-        } else {
-          entriesPerDate[date] = [...entriesPerDate[date], entry as Entry];
-        }
-      });
-
-      return entriesPerDate;
-    },
+    select: (data) => data.pages.flatMap((page) => page.data?.entries || []) as Entry[],
   });
 
   const sentinel = useRef<HTMLDivElement | null>(null);
@@ -165,8 +152,6 @@ export const EntriesList: FC = () => {
       invalidateQuery: [transactionsKeys.all()],
     },
   });
-
-  const entries = Object.entries(entriesData);
 
   function getEntryData(entry: Entry) {
     return {
@@ -323,84 +308,61 @@ export const EntriesList: FC = () => {
   return (
     <div className="flex flex-col items-center gap-4">
       <Card className="p-0" header={<h2 className="text-muted-foreground">Transactions</h2>}>
-        {entries.length > 0 ? (
-          <>
-            <table className="hidden w-full md:table">
-              <tbody>
-                {entries
-                  .map(([date, entries]) => [
-                    <tr key={date} className="bg-zinc-100">
-                      <td className="px-3 py-1 text-sm text-zinc-500" colSpan={5}>
-                        {dayjs(date, 'YYYY-MM-DD').format('DD of MMMM')}
-                      </td>
-                    </tr>,
-                    ...entries.map((entry, idx) => {
-                      const data = getEntryData(entry);
-                      const padding = idx === entries.length - 1 ? 'px-3 py-1' : 'px-3 pt-1';
-                      return (
-                        <tr key={entry.id}>
-                          <td className={cn('w-[70%]', padding)}>
-                            <div className="flex items-center gap-2">
-                              {data.category()}
-                              <p>
-                                {entry.name} {data.installment()}
-                              </p>
-                            </div>
-                          </td>
-                          <td
-                            className={cn(
-                              'w-[10%] text-right font-medium',
-                              entry.amount! < 0 ? 'text-red-400' : 'text-green-500',
-                              padding,
-                            )}
-                          >
-                            <span className="whitespace-nowrap">{data.amount()}</span>
-                          </td>
-                          <td className={cn('w-[4%] text-right', padding)}>
-                            <div className="flex items-center gap-2">{data.actions()}</div>
-                          </td>
-                        </tr>
-                      );
-                    }),
-                  ])
-                  .flat(Infinity)}
-              </tbody>
-            </table>
-            <div className="flex flex-col md:hidden">
-              {entries.map(([date, entries]) => (
-                <div key={date}>
-                  <h3 className="px-3 py-1 font-medium">
-                    {dayjs(date, 'YYYY-MM-DD').format('DD of MMMM')}
-                  </h3>
-                  {entries.map((entry) => {
-                    const data = getEntryData(entry);
-                    return (
-                      <div
-                        key={entry.id}
-                        className="flex justify-between gap-2 border-b border-zinc-300 px-3 pt-1 pb-2"
-                      >
-                        <div className="flex min-w-0 flex-1 items-center gap-2">
-                          {data.category()}
-                          <p className="truncate font-medium">{entry.name}</p>
-                        </div>
-                        <div className="flex flex-col items-end gap-2 font-medium">
-                          <span
-                            className={cn(
-                              'whitespace-nowrap',
-                              entry.amount! < 0 ? 'text-red-400' : 'text-green-500',
-                            )}
-                          >
-                            {data.amount()}
-                          </span>
-                          <div className="flex items-center gap-1">{data.actions()}</div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-          </>
+        {entriesData.length > 0 ? (
+          <DataTable
+            data={entriesData}
+            groupBy={(row) => dayjs(row.reference_date, 'YYYY-MM-DD').format('DD of MMMM')}
+            columns={[
+              {
+                id: 'name',
+                title: 'Name',
+                trClassName: 'text-left',
+                render: (entry) => {
+                  const data = getEntryData(entry);
+
+                  return (
+                    <div className="flex items-center gap-2">
+                      {data.category()}
+                      <p>
+                        {entry.name} {data.installment()}
+                      </p>
+                    </div>
+                  );
+                },
+              },
+              {
+                id: 'amount',
+                title: 'Amount',
+                trClassName: 'text-right',
+                render: (entry) => {
+                  const data = getEntryData(entry);
+
+                  return (
+                    <span
+                      className={cn(
+                        'font-semibold whitespace-nowrap',
+                        entry.amount! < 0 ? 'text-red-400' : 'text-green-500',
+                      )}
+                    >
+                      {data.amount()}
+                    </span>
+                  );
+                },
+              },
+              {
+                id: 'actions',
+                title: '',
+                trClassName: 'w-[1%] whitespace-nowrap',
+                render: (entry) => {
+                  const data = getEntryData(entry);
+
+                  return (
+                    <div className="flex items-center justify-end gap-2">{data.actions()}</div>
+                  );
+                },
+              },
+            ]}
+          />
         ) : (
           <div className="flex flex-col items-center justify-center pb-8">
             <img src="/empty_state_wallet.webp" alt="no results found" className="size-28" />
@@ -413,6 +375,7 @@ export const EntriesList: FC = () => {
             </Button>
           </div>
         )}
+
         {isEditingExpense && (
           <SaveSimpleExpenseDialog
             isLoading={
@@ -429,7 +392,12 @@ export const EntriesList: FC = () => {
                   payload: {
                     name: data.name,
                     note: data.description,
-                    entries: [{ amount: parseUSD(data.amount) * -1, reference_date: data.date }],
+                    entries: [
+                      {
+                        amount: parseUSD(data.amount) * -1,
+                        reference_date: data.date,
+                      },
+                    ],
                     category_id: data.category?.id,
                   },
                 },
@@ -442,6 +410,7 @@ export const EntriesList: FC = () => {
             }}
           />
         )}
+
         {isEditingIncome && (
           <SaveIncomeDialog
             isLoading={
@@ -458,7 +427,12 @@ export const EntriesList: FC = () => {
                   payload: {
                     name: data.name,
                     note: data.description,
-                    entries: [{ amount: parseUSD(data.amount), reference_date: data.date }],
+                    entries: [
+                      {
+                        amount: parseUSD(data.amount),
+                        reference_date: data.date,
+                      },
+                    ],
                     category_id: data.category?.id,
                   },
                 },
@@ -471,6 +445,7 @@ export const EntriesList: FC = () => {
             }}
           />
         )}
+
         {isEditingInstallment && (
           <SaveInstallmentDialog
             isLoading={
@@ -502,6 +477,7 @@ export const EntriesList: FC = () => {
             }}
             defaultValues={(() => {
               if (!isEditingInstallment?.defaultValues) return undefined;
+
               return {
                 amount: isEditingInstallment.defaultValues.amount,
                 name: isEditingInstallment.defaultValues.name,

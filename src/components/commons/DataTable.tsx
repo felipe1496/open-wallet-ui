@@ -14,16 +14,26 @@ interface Props<T> {
   data: T[];
   isLoading?: boolean;
   getRowProps?: (row: T) => HTMLAttributes<HTMLTableRowElement>;
+  groupBy?: (row: T) => string;
 }
 
-export const DataTable = <T,>({ columns, data, isLoading = false, getRowProps }: Props<T>) => {
+export const DataTable = <T,>({
+  columns,
+  data,
+  isLoading = false,
+  getRowProps,
+  groupBy,
+}: Props<T>) => {
   function renderRows() {
     if (isLoading) {
       return Array.from({ length: 10 }).map((_, rowIndex) => (
         <tr key={`table-row-${rowIndex}`}>
           {columns.map((column) => (
-            <td key={`table-cell-${rowIndex}-${String(column.id)}`} className={cn('px-3 py-1.5')}>
-              {column.isLoading || null}
+            <td
+              key={`table-cell-${rowIndex}-${String(column.id)}`}
+              className={cn('px-3 py-1.5', column.trClassName)}
+            >
+              {column.isLoading ?? null}
             </td>
           ))}
         </tr>
@@ -40,21 +50,50 @@ export const DataTable = <T,>({ columns, data, isLoading = false, getRowProps }:
       );
     }
 
-    return data.map((row, rowIndex) => {
-      const rowProps = getRowProps?.(row) || {};
-      const { className: rowClassName, ...rest } = rowProps;
-      return (
-        <tr key={`table-row-${rowIndex}`} {...rest} className={cn(rowClassName)}>
-          {columns.map((column) => {
-            const padding = rowIndex === data.length - 1 ? 'px-3 py-1' : 'px-3 pt-1';
-            return (
-              <td key={`table-cell-${rowIndex}-${String(column.id)}`} className={cn(padding)}>
-                {column.render ? column.render(row) : null}
-              </td>
-            );
-          })}
-        </tr>
-      );
+    const groupedData = data.reduce<Record<string, T[]>>((acc, row) => {
+      const key = groupBy ? groupBy(row) : 'default';
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+
+      acc[key].push(row);
+      return acc;
+    }, {});
+
+    return Object.entries(groupedData).flatMap(([group, rows]) => {
+      const groupHeader: ReactNode[] = [];
+
+      if (groupBy) {
+        groupHeader.push(
+          <tr key={`group-${group}`} className="border-b border-zinc-200 bg-zinc-50">
+            <td colSpan={columns.length} className="px-3 py-1 text-sm text-zinc-500">
+              {group}
+            </td>
+          </tr>,
+        );
+      }
+
+      const groupRows = rows.map((row, rowIndex) => {
+        const rowProps = getRowProps?.(row) || {};
+        const { className: rowClassName, ...rest } = rowProps;
+        return (
+          <tr key={`table-row-${group}-${rowIndex}`} {...rest} className={cn(rowClassName)}>
+            {columns.map((column) => {
+              const padding = rowIndex === rows.length - 1 ? 'px-3 py-1' : 'px-3 pt-1';
+              return (
+                <td
+                  key={`table-cell-${group}-${rowIndex}-${String(column.id)}`}
+                  className={cn(padding, column.trClassName)}
+                >
+                  {column.render?.(row) ?? null}
+                </td>
+              );
+            })}
+          </tr>
+        );
+      });
+
+      return [...groupHeader, ...groupRows];
     });
   }
   return (
@@ -64,10 +103,7 @@ export const DataTable = <T,>({ columns, data, isLoading = false, getRowProps }:
           {columns.map((column) => (
             <th
               key={`table-column-${String(column.id)}`}
-              className={cn(
-                'bg-zinc-100 px-3 py-1.5 text-left text-sm font-semibold',
-                column.trClassName,
-              )}
+              className={cn('bg-zinc-100 px-3 py-1.5 text-sm font-semibold', column.trClassName)}
             >
               {column.title}
             </th>
