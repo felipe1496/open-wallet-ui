@@ -20,6 +20,7 @@ import { Spinner } from '../../../components/commons/loader/Spinner';
 
 import { useAPI } from '../../../hooks/useAPI';
 import type { Entry, ListEntriesResponse } from '../../../queries/transactions-queries';
+import { useTranslation } from 'react-i18next';
 
 export const EntriesList: FC = () => {
   const api = useAPI();
@@ -42,6 +43,15 @@ export const EntriesList: FC = () => {
   const confirm = useConfirm();
   const queryClient = useQueryClient();
   const periodFormatted = dayjs().year(period.year).month(period.month).format('YYYYMM');
+  const { t } = useTranslation();
+
+  const formatEntryDate = (date: string) => {
+    const parsedDate = dayjs(date, 'YYYY-MM-DD');
+    return t('dates.dayOfMonth', {
+      day: parsedDate.format('DD'),
+      month: t('dates.months.full', { returnObjects: true })[parsedDate.month()],
+    });
+  };
 
   useSuspenseQuery({
     queryKey: ['recurrences', 'prepare', periodFormatted],
@@ -57,8 +67,8 @@ export const EntriesList: FC = () => {
     variables: patchTransactionVariables,
   } = usePatchTransaction({
     meta: {
-      successNotification: 'Transaction updated successfully',
-      errorNotification: 'There was an error updating the transaction',
+      successNotification: t('notifications.transactions.updated'),
+      errorNotification: t('notifications.transactions.updateError'),
       invalidateQuery: [transactionsKeys.all()],
     },
   });
@@ -161,7 +171,7 @@ export const EntriesList: FC = () => {
       }
     },
     meta: {
-      errorNotification: 'An error occurred while deleting the transaction',
+      errorNotification: t('notifications.transactions.deleteError'),
       invalidateQuery: [transactionsKeys.all()],
     },
   });
@@ -306,8 +316,8 @@ export const EntriesList: FC = () => {
               variant="outlined"
               onClick={() =>
                 confirm.add(
-                  'Delete Transaction',
-                  'This action will delete this entry and all other entries related to it. Are you sure? This action cannot be undone.',
+                  t('wallet.confirmDelete.title'),
+                  t('wallet.confirmDelete.description'),
                   () => deleteTransaction(entry.transaction_id!),
                 )
               }
@@ -322,7 +332,10 @@ export const EntriesList: FC = () => {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <Card className="p-0" header={<h2 className="text-muted-foreground">Transactions</h2>}>
+      <Card
+        className="p-0"
+        header={<h2 className="text-muted-foreground">{t('wallet.transactions')}</h2>}
+      >
         {entries.length > 0 ? (
           <>
             <table className="hidden w-full md:table">
@@ -331,7 +344,7 @@ export const EntriesList: FC = () => {
                   .map(([date, entries]) => [
                     <tr key={date} className="bg-zinc-100">
                       <td className="px-3 py-1 text-sm text-zinc-500" colSpan={5}>
-                        {dayjs(date, 'YYYY-MM-DD').format('DD of MMMM')}
+                        {formatEntryDate(date)}
                       </td>
                     </tr>,
                     ...entries.map((entry, idx) => {
@@ -369,9 +382,7 @@ export const EntriesList: FC = () => {
             <div className="flex flex-col md:hidden">
               {entries.map(([date, entries]) => (
                 <div key={date}>
-                  <h3 className="px-3 py-1 font-medium">
-                    {dayjs(date, 'YYYY-MM-DD').format('DD of MMMM')}
-                  </h3>
+                  <h3 className="px-3 py-1 font-medium">{formatEntryDate(date)}</h3>
                   {entries.map((entry) => {
                     const data = getEntryData(entry);
                     return (
@@ -403,13 +414,19 @@ export const EntriesList: FC = () => {
           </>
         ) : (
           <div className="flex flex-col items-center justify-center pb-8">
-            <img src="/empty_state_wallet.webp" alt="no results found" className="size-28" />
+            <img
+              src="/empty_state_wallet.webp"
+              alt={t('common.alt.noResultsFound')}
+              className="size-28"
+            />
 
-            <span className="text-lg font-medium">No transactions yet</span>
-            <span>Try adding one</span>
+            <span className="text-lg font-medium">{t('wallet.empty.title')}</span>
+            <span>{t('wallet.empty.description')}</span>
 
             <Button className="mt-3" variant="outlined" asChild>
-              <Link to={{ pathname: ROUTES.WALLET.NEW_TRANSACTION }}>Add Transaction</Link>
+              <Link to={{ pathname: ROUTES.WALLET.NEW_TRANSACTION }}>
+                {t('wallet.addTransaction')}
+              </Link>
             </Button>
           </div>
         )}

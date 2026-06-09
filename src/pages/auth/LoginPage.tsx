@@ -10,12 +10,14 @@ import { toast } from 'sonner';
 import { usePostLoginGoogle } from '../../hooks/mutations/usePostLoginGoogle';
 import { Page } from '../../components/commons/Page';
 import { Card } from '../../components/commons/Card';
+import { useTranslation } from 'react-i18next';
 
 export const LoginPage: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const googleCallback = searchParams.get('code');
   const { login, sessionUser } = useSession();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { mutate: loginGoogle, isPending: loginGoogleIsPending } = usePostLoginGoogle({
     onSuccess: (data) => {
@@ -23,7 +25,7 @@ export const LoginPage: FC = () => {
       navigate(ROUTES.HOME);
     },
     onError: () => {
-      toast.error('It was not possible to login with Google');
+      toast.error(t('auth.errors.googleLogin'));
     },
   });
 
@@ -53,8 +55,8 @@ export const LoginPage: FC = () => {
     <Page>
       <main className="flex h-screen w-full items-center justify-center px-2">
         <Card wrapperClassName="w-full max-w-96">
-          <h1 className="text-xl font-medium">Welcome to Money</h1>
-          <p className="text-sm text-zinc-400">Log in with your favorite provider</p>
+          <h1 className="text-xl font-medium">{t('auth.title')}</h1>
+          <p className="text-sm text-zinc-400">{t('auth.subtitle')}</p>
 
           <Link
             to={LINKS.GOOGLE_AUTH.replace(':client_id', env().GOOGLE_CLIENT_ID).replace(
@@ -63,14 +65,12 @@ export const LoginPage: FC = () => {
             )}
           >
             <Button disabled={loginGoogleIsPending} className="mt-6" variant="outlined" size="wide">
-              <img src="/google_48.webp" alt="google icon" className="size-4" />
-              Continue with Google
+              <img src="/google_48.webp" alt={t('common.alt.googleIcon')} className="size-4" />
+              {t('auth.continueWithGoogle')}
             </Button>
           </Link>
 
-          <p className="mt-6 text-center text-sm text-zinc-400">
-            By continuing, you agree to money's Terms of Service and Privacy Policy.
-          </p>
+          <p className="mt-6 text-center text-sm text-zinc-400">{t('auth.terms')}</p>
         </Card>
       </main>
     </Page>

@@ -15,6 +15,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { ROUTES } from '../constants/routes';
 import { MENU } from '../constants/menu';
 import { Zelda } from './commons/Zelda';
+import { useTranslation } from 'react-i18next';
 
 export const TopBar: FC = () => {
   const sessionUser = useSession((state) => state.sessionUser);
@@ -22,6 +23,7 @@ export const TopBar: FC = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t } = useTranslation();
 
   return (
     <header className="fixed top-0 z-10 flex h-14 w-screen items-center justify-between border-b border-zinc-300 bg-white px-1 shadow-sm md:hidden">
@@ -34,7 +36,7 @@ export const TopBar: FC = () => {
         <DrawerContent className="p-4 pt-8">
           {MENU.ITEMS.map((item, idx) => (
             <Zelda
-              key={`drawer-item-${item.label.trim().toLocaleLowerCase()}-${idx}`}
+              key={`drawer-item-${item.labelKey}-${idx}`}
               onClick={() => setIsOpen(false)}
               to={item.route}
               className={cn(
@@ -44,7 +46,7 @@ export const TopBar: FC = () => {
               keepQueryParams
             >
               <item.icon className="size-5 shrink-0" />
-              {item.label}
+              {t(item.labelKey)}
             </Zelda>
           ))}
         </DrawerContent>
@@ -61,7 +63,7 @@ export const TopBar: FC = () => {
               <Avatar>
                 <AvatarImage
                   src={sessionUser?.avatar_url}
-                  alt="Profile picture"
+                  alt={t('common.alt.profilePicture')}
                   className="size-6 shrink-0 rounded-full"
                 />
                 <AvatarFallback>
@@ -85,7 +87,7 @@ export const TopBar: FC = () => {
             }}
           >
             <LogOutIcon className="size-4" />
-            Log out
+            {t('common.actions.logOut')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

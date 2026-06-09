@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from './Popover';
 import { cn } from '../../utils/functions';
 import { useState, type FC } from 'react';
-import { MONTHS } from '../../constants/dates';
+import { useTranslation } from 'react-i18next';
 
 interface PeriodPickerCustomProps {
   value?: { month: number; year: number };
@@ -23,6 +23,7 @@ export const PeriodPickerCustom: FC<PeriodPickerCustomProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [displayYear, setDisplayYear] = useState(value?.year || new Date().getFullYear());
+  const { t } = useTranslation();
 
   const handleMonthSelect = (monthIndex: number) => {
     onChange?.({ month: monthIndex, year: displayYear });
@@ -71,14 +72,15 @@ export const PeriodPickerCustom: FC<PeriodPickerCustomProps> = ({
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-            {MONTHS.map((month, index) => {
+            {Array.from({ length: 12 }).map((_, index) => {
+              const month = t('dates.months.short', { returnObjects: true })[index];
               const isSelected = value?.month === index && value?.year === displayYear;
               const isCurrentMonth =
                 new Date().getMonth() === index && new Date().getFullYear() === displayYear;
 
               return (
                 <button
-                  key={month}
+                  key={index}
                   className={cn(
                     'h-10 cursor-pointer rounded text-sm font-medium transition-all',
                     isSelected

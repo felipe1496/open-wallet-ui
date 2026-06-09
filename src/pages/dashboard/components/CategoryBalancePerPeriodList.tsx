@@ -6,6 +6,7 @@ import { cn } from '../../../utils/functions';
 import { useState } from 'react';
 
 import { useAPI } from '../../../hooks/useAPI';
+import { useTranslation } from 'react-i18next';
 
 const DATA_EXPANDED = {
   SHOW_ALL: 100,
@@ -14,6 +15,7 @@ const DATA_EXPANDED = {
 
 export const CategoryBalancePerPeriodList = () => {
   const [perPage, setPerPage] = useState(DATA_EXPANDED.SHOW_LESS);
+  const { t } = useTranslation();
 
   const { period } = usePeriod();
   const api = useAPI();
@@ -42,7 +44,7 @@ export const CategoryBalancePerPeriodList = () => {
             setPerPage(DATA_EXPANDED.SHOW_ALL);
           }}
         >
-          Show more
+          {t('common.actions.showMore')}
         </button>
       );
     }
@@ -54,7 +56,7 @@ export const CategoryBalancePerPeriodList = () => {
           setPerPage(DATA_EXPANDED.SHOW_LESS);
         }}
       >
-        Show less
+        {t('common.actions.showLess')}
       </button>
     );
   };
@@ -63,8 +65,8 @@ export const CategoryBalancePerPeriodList = () => {
     return (
       <div className="flex flex-col items-center justify-center text-center">
         <img src="/empty_state_tag.webp" alt="" className="size-20" />
-        <span className="mt-3 text-lg font-medium">No transactions with categories yet</span>
-        <span>Categorize your transactions to check some insights</span>
+        <span className="mt-3 text-lg font-medium">{t('common.empty.noCategoriesTitle')}</span>
+        <span>{t('common.empty.noCategoriesDescription')}</span>
       </div>
     );
   }

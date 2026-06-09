@@ -9,6 +9,7 @@ import {
 import { Radio, RadioItem } from '../../../components/commons/Radio';
 import { INSTANCE } from '../../../constants/ui';
 import { Button } from '../../../components/commons/Button';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   title: ReactNode;
@@ -27,6 +28,13 @@ export const InstanceSelectDialog: FC<Props> = ({
   value,
   onConfirm,
 }) => {
+  const { t } = useTranslation();
+  const instanceLabels = {
+    [INSTANCE.THIS_ONE]: t('wallet.instance.onlyThisOne'),
+    [INSTANCE.THIS_AND_FOLLOWING]: t('wallet.instance.thisAndFollowing'),
+    [INSTANCE.ALL]: t('wallet.instance.allInSeries'),
+  };
+
   return (
     <Dialog open={isVisible} onOpenChange={onClose}>
       <DialogContent className="max-w-2xs">
@@ -44,21 +52,25 @@ export const InstanceSelectDialog: FC<Props> = ({
             value={value}
             className="flex flex-col gap-2.5"
             defaultValue={INSTANCE.THIS_ONE}
-            aria-label="Chose instances to edit"
+            aria-label={t('wallet.instance.ariaLabel')}
             onValueChange={onChange}
           >
             {Object.values(INSTANCE).map((value, idx) => (
-              <RadioItem key={`instance-select-${value}-${idx}`} label={value} value={value} />
+              <RadioItem
+                key={`instance-select-${value}-${idx}`}
+                label={instanceLabels[value]}
+                value={value}
+              />
             ))}
           </Radio>
 
           <div className="mt-4 flex justify-end gap-2">
             <DialogClose asChild>
               <Button variant="outlined" type="button">
-                Cancel
+                {t('common.actions.cancel')}
               </Button>
             </DialogClose>
-            <Button>Confirm</Button>
+            <Button>{t('common.actions.confirm')}</Button>
           </div>
         </form>
       </DialogContent>

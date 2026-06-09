@@ -19,6 +19,9 @@ import { formatCurrency } from '../../../utils/functions';
 import { Form } from '../../../components/commons/Form';
 import { AsyncSelectCategory } from '../../../components/AsyncSelectCategory';
 import { Spinner } from '../../../components/commons/loader/Spinner';
+import { useTranslation } from 'react-i18next';
+import type { Category } from '../../../queries/categories-queries';
+import type { Option } from '../../../components/commons/select/AsyncSelect';
 
 interface Props {
   defaultValues?: Partial<Form>;
@@ -36,15 +39,13 @@ const initialDefaultValues: Form = {
   category: null,
 };
 
-const schema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-  amount: z.string(),
-  date: z.string().refine((date) => dayjs(date, 'YYYY-MM-DD').isValid(), 'Invalid date'),
-  description: z.string().max(400, 'Description is too long').optional(),
-  category: z.any(),
-});
-
-type Form = z.infer<typeof schema>;
+type Form = {
+  name: string;
+  amount: string;
+  date: string;
+  description?: string;
+  category: Option<Category> | null;
+};
 
 export const SaveIncomeDialog: FCC<Props> = ({
   defaultValues = initialDefaultValues,
@@ -54,6 +55,23 @@ export const SaveIncomeDialog: FCC<Props> = ({
   onClose,
   isLoading = false,
 }) => {
+  const { t } = useTranslation();
+  const schema = z.object({
+    name: z
+      .string()
+      .min(1, t('common.form.validation.nameRequired'))
+      .max(100, t('common.form.validation.nameTooLong')),
+    amount: z.string(),
+    date: z
+      .string()
+      .refine(
+        (date) => dayjs(date, 'YYYY-MM-DD').isValid(),
+        t('common.form.validation.invalidDate'),
+      ),
+    description: z.string().max(400, t('common.form.validation.descriptionTooLong')).optional(),
+    category: z.any(),
+  });
+
   const {
     register,
     handleSubmit,
@@ -74,19 +92,22 @@ export const SaveIncomeDialog: FCC<Props> = ({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Income</DialogTitle>
+          <DialogTitle>{t('wallet.transactionTypes.income')}</DialogTitle>
         </DialogHeader>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <label className="flex flex-col text-sm">
-            <span data-error={errors.name?.message || '*'}>Name</span>
-            <Input placeholder="Cinema ticket, Groceries..." {...register('name')} />
+            <span data-error={errors.name?.message || '*'}>{t('common.form.fields.name')}</span>
+            <Input
+              placeholder={t('common.form.placeholders.transactionName')}
+              {...register('name')}
+            />
           </label>
           <label className="flex flex-col text-sm">
-            <span data-error={errors.amount?.message || '*'}>Amount</span>
+            <span data-error={errors.amount?.message || '*'}>{t('common.form.fields.amount')}</span>
             <MoneyInput {...register('amount')} minValue={0} maxValue={999999} />
           </label>
           <label className="flex flex-col text-sm">
-            <span data-error={errors.category?.message}>Category</span>
+            <span data-error={errors.category?.message}>{t('common.form.fields.category')}</span>
             <Controller
               control={control}
               name="category"
@@ -96,22 +117,24 @@ export const SaveIncomeDialog: FCC<Props> = ({
             />
           </label>
           <label className="flex flex-col text-sm">
-            <span data-error={errors.date?.message || '*'}>Date</span>
+            <span data-error={errors.date?.message || '*'}>{t('common.form.fields.date')}</span>
             <Input type="date" {...register('date')} />
           </label>
           <label className="flex flex-col text-sm">
-            <span data-error={errors.description?.message}>Description</span>
+            <span data-error={errors.description?.message}>
+              {t('common.form.fields.description')}
+            </span>
             <Textarea className="min-h-28" {...register('description')} />
           </label>
 
           <div className="flex w-full gap-2">
             <DialogClose asChild>
               <Button className="w-full" variant="outlined" disabled={isLoading}>
-                Cancel
+                {t('common.actions.cancel')}
               </Button>
             </DialogClose>
             <Button className="w-full" disabled={isLoading}>
-              {isLoading ? <Spinner variant="secondary" /> : 'Save'}
+              {isLoading ? <Spinner variant="secondary" /> : t('common.actions.save')}
             </Button>
           </div>
         </Form>

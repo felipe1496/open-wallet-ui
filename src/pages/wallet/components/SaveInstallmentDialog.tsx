@@ -23,6 +23,7 @@ import type { Option } from '../../../components/commons/select/AsyncSelect';
 import { Form } from '../../../components/commons/Form';
 import { useState } from 'react';
 import { Spinner } from '../../../components/commons/loader/Spinner';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   defaultValues?: Partial<Form>;
@@ -33,18 +34,12 @@ interface Props {
   isLoading?: boolean;
 }
 
-const schema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-  amount: z.string(),
-  reference_date: z.string(),
-  installments: z
-    .string()
-    .refine((installments) => Number(installments) % 1 === 0, 'Installments must be an integer'),
-  note: z.string().max(400, 'Note is too long').optional(),
-  category: z.any(),
-});
-
-type Form = Omit<z.infer<typeof schema>, 'category'> & {
+type Form = {
+  name: string;
+  amount: string;
+  reference_date: string;
+  installments: string;
+  note?: string;
   category: Option<Category> | null;
 };
 
@@ -87,6 +82,28 @@ export const SaveInstallmentDialog: FCC<Props> = ({
   isLoading = false,
 }) => {
   const [step, setStep] = useState<(typeof STEPS)[keyof typeof STEPS]>(STEPS.FORM);
+  const { t } = useTranslation();
+  const schema = z.object({
+    name: z
+      .string()
+      .min(1, t('common.form.validation.nameRequired'))
+      .max(100, t('common.form.validation.nameTooLong')),
+    amount: z.string(),
+    reference_date: z.string(),
+    installments: z
+      .string()
+      .refine(
+        (installments) => Number(installments) % 1 === 0,
+        t('common.form.validation.installmentsInteger'),
+      ),
+    note: z.string().max(400, t('common.form.validation.noteTooLong')).optional(),
+    category: z.any(),
+  });
+
+  const formatPreviewPeriod = (referenceDate: string) => {
+    const date = dayjs(referenceDate, 'YYYY-MM-DD');
+    return `${t('dates.months.short', { returnObjects: true })[date.month()]} ${date.year()}`;
+  };
 
   const {
     register,
@@ -162,27 +179,36 @@ export const SaveInstallmentDialog: FCC<Props> = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {step === STEPS.FORM && 'Installment'}
-            {step === STEPS.PREVIEW && 'Preview'}
+            {step === STEPS.FORM && t('wallet.transactionTypes.installment')}
+            {step === STEPS.PREVIEW && t('wallet.installment.preview')}
           </DialogTitle>
         </DialogHeader>
         {step === STEPS.FORM && (
           <Form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex w-full flex-col gap-3">
               <label className="flex flex-col text-sm">
-                <span data-error={errors.name?.message || '*'}>Name</span>
-                <Input placeholder="Cinema ticket, Groceries..." {...register('name')} />
+                <span data-error={errors.name?.message || '*'}>{t('common.form.fields.name')}</span>
+                <Input
+                  placeholder={t('common.form.placeholders.transactionName')}
+                  {...register('name')}
+                />
               </label>
               <label className="flex flex-col text-sm">
-                <span data-error={errors.amount?.message || '*'}>Total Amount</span>
+                <span data-error={errors.amount?.message || '*'}>
+                  {t('common.form.fields.totalAmount')}
+                </span>
                 <MoneyInput {...register('amount')} minValue={0} maxValue={999999} />
               </label>
               <label className="flex flex-col text-sm">
-                <span data-error={errors.installments?.message || '*'}>Installments</span>
+                <span data-error={errors.installments?.message || '*'}>
+                  {t('common.form.fields.installments')}
+                </span>
                 <NumericInput {...register('installments')} />
               </label>
               <label className="flex flex-col text-sm">
-                <span data-error={errors.category?.message}>Category</span>
+                <span data-error={errors.category?.message}>
+                  {t('common.form.fields.category')}
+                </span>
                 <Controller
                   control={control}
                   name="category"
@@ -192,11 +218,13 @@ export const SaveInstallmentDialog: FCC<Props> = ({
                 />
               </label>
               <label className="flex flex-col text-sm">
-                <span data-error={errors.reference_date?.message || '*'}>Date</span>
+                <span data-error={errors.reference_date?.message || '*'}>
+                  {t('common.form.fields.date')}
+                </span>
                 <Input type="date" {...register('reference_date')} />
               </label>
               <label className="flex flex-col text-sm">
-                <span data-error={errors.note?.message}>Description</span>
+                <span data-error={errors.note?.message}>{t('common.form.fields.description')}</span>
                 <Textarea className="min-h-28" {...register('note')} />
               </label>
             </div>
@@ -204,10 +232,10 @@ export const SaveInstallmentDialog: FCC<Props> = ({
             <div className="flex w-full gap-2">
               <DialogClose asChild>
                 <Button className="w-full" variant="outlined">
-                  Cancel
+                  {t('common.actions.cancel')}
                 </Button>
               </DialogClose>
-              <Button className="w-full">Next</Button>
+              <Button className="w-full">{t('common.actions.next')}</Button>
             </div>
           </Form>
         )}
@@ -217,7 +245,7 @@ export const SaveInstallmentDialog: FCC<Props> = ({
               {preview.map((preview, idx) => (
                 <div className="flex items-center justify-between gap-4">
                   <span className="w-24 text-nowrap">
-                    {dayjs(preview.reference_date, 'YYYY-MM-DD').format('MMM YYYY')}
+                    {formatPreviewPeriod(preview.reference_date)}
                   </span>
                   <MoneyInput className="w-full" {...previewRegister(`entries.${idx}.amount`)} />
                 </div>
@@ -231,10 +259,10 @@ export const SaveInstallmentDialog: FCC<Props> = ({
                 onClick={() => setStep(STEPS.FORM)}
                 disabled={isLoading}
               >
-                Back
+                {t('common.actions.back')}
               </Button>
               <Button className="w-full" disabled={isLoading}>
-                {isLoading ? <Spinner variant="secondary" /> : 'Save'}
+                {isLoading ? <Spinner variant="secondary" /> : t('common.actions.save')}
               </Button>
             </div>
           </Form>

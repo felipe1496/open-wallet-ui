@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 import { cn } from '../../utils/functions';
+import { useTranslation } from 'react-i18next';
 
 interface TablePaginationProps {
   currentPage: number;
@@ -18,6 +19,8 @@ export const TablePagination = ({
   itemsPerPage = 10,
   className,
 }: TablePaginationProps) => {
+  const { t } = useTranslation();
+
   const getPageNumbers = () => {
     const pages: (number | 'ellipsis')[] = [];
     const showEllipsisStart = currentPage > 3;
@@ -69,7 +72,11 @@ export const TablePagination = ({
       {/* Info text */}
       {totalItems !== undefined && (
         <span className="text-muted-foreground text-sm">
-          Showing {startItem}-{endItem} of {totalItems} items
+          {t('common.pagination.showingItems', {
+            start: startItem,
+            end: endItem,
+            total: totalItems,
+          })}
         </span>
       )}
 
@@ -84,7 +91,7 @@ export const TablePagination = ({
             'text-muted-foreground hover:text-foreground hover:bg-zinc-800',
             'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent',
           )}
-          aria-label="Primeira página"
+          aria-label={t('common.pagination.firstPage')}
         >
           <ChevronsLeft className="h-4 w-4" />
         </button>
@@ -98,7 +105,7 @@ export const TablePagination = ({
             'text-muted-foreground hover:text-foreground hover:bg-zinc-800',
             'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent',
           )}
-          aria-label="Página anterior"
+          aria-label={t('common.pagination.previousPage')}
         >
           <ChevronLeft className="h-4 w-4" />
         </button>
@@ -123,7 +130,7 @@ export const TablePagination = ({
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground hover:bg-zinc-800',
                 )}
-                aria-label={`Página ${page}`}
+                aria-label={t('common.pagination.page', { page })}
                 aria-current={currentPage === page ? 'page' : undefined}
               >
                 {page}
@@ -141,7 +148,7 @@ export const TablePagination = ({
             'text-muted-foreground hover:text-foreground hover:bg-zinc-800',
             'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent',
           )}
-          aria-label="Próxima página"
+          aria-label={t('common.pagination.nextPage')}
         >
           <ChevronRight className="h-4 w-4" />
         </button>
@@ -155,7 +162,7 @@ export const TablePagination = ({
             'text-muted-foreground hover:text-foreground hover:bg-zinc-800',
             'disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent',
           )}
-          aria-label="Última página"
+          aria-label={t('common.pagination.lastPage')}
         >
           <ChevronsRight className="h-4 w-4" />
         </button>

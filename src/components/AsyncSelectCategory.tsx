@@ -10,6 +10,7 @@ import { useDebounce } from '../hooks/useDebounce';
 import { SaveCategoryDialog } from '../pages/categories/components/SaveCategoryDialog';
 import { usePostCategory } from '../hooks/mutations/usePostCategory';
 import { useAPI } from '../hooks/useAPI';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   selected?: Option<Category> | null;
@@ -26,6 +27,7 @@ export const AsyncSelectCategory: FC<Props> = ({
   const [creatingName, setCreatingName] = useState<string>('');
   const [addCategoryVisible, setAddCategoryVisible] = useState(false);
   const api = useAPI();
+  const { t } = useTranslation();
 
   const debouncedSearch = useDebounce(search, 500);
 
@@ -43,8 +45,8 @@ export const AsyncSelectCategory: FC<Props> = ({
 
   const { mutateAsync: postCategory, isPending } = usePostCategory({
     meta: {
-      successNotification: 'Category created successfully',
-      errorNotification: 'There was an error creating the category',
+      successNotification: t('notifications.categories.created'),
+      errorNotification: t('notifications.categories.createError'),
       invalidateQuery: [categoriesKeys.all()],
     },
   });
@@ -58,7 +60,7 @@ export const AsyncSelectCategory: FC<Props> = ({
         selected={selected}
         onSelectedChange={onChange}
         onSearchChange={setSearch}
-        placeholder="Select a category..."
+        placeholder={t('common.select.categoryPlaceholder')}
         onCreate={
           isCreatable
             ? (name) => {

@@ -10,6 +10,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover';
 import { cn } from '../../../utils/functions';
 import { useState, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface Option<T> {
   id: string;
@@ -37,9 +38,9 @@ export function AsyncSelect<T>({
   options,
   selected,
   onSelectedChange,
-  placeholder = 'Select an option...',
-  searchPlaceholder = 'Search...',
-  emptyMessage = 'No results.',
+  placeholder,
+  searchPlaceholder,
+  emptyMessage,
   className,
   disabled = false,
   isLoading = false,
@@ -48,6 +49,10 @@ export function AsyncSelect<T>({
   onCreate,
 }: Props<T>) {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
+  const placeholderText = placeholder ?? t('common.select.placeholder');
+  const searchPlaceholderText = searchPlaceholder ?? t('common.select.searchPlaceholder');
+  const emptyMessageText = emptyMessage ?? t('common.select.emptyMessage');
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -68,12 +73,12 @@ export function AsyncSelect<T>({
             className,
           )}
         >
-          {selected ? selected.label : placeholder}
+          {selected ? selected.label : placeholderText}
           <div className="flex items-center gap-2">
             <div
               role="button"
               tabIndex={disabled ? -1 : 0}
-              aria-label="Clear selection"
+              aria-label={t('common.select.clearSelection')}
               onKeyDown={(evt) => {
                 if (evt.key === 'Enter' || evt.key === ' ') {
                   evt.preventDefault();
@@ -109,7 +114,7 @@ export function AsyncSelect<T>({
           <div className="flex items-center border-b border-zinc-300 px-3">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <input
-              placeholder={searchPlaceholder}
+              placeholder={searchPlaceholderText}
               className="placeholder:text-muted-foreground flex h-10 w-full rounded-md border-0 bg-transparent py-3 text-sm outline-none disabled:cursor-not-allowed disabled:opacity-50"
               value={search}
               onChange={(evt) => onSearchChange(evt.target.value)}
@@ -122,7 +127,7 @@ export function AsyncSelect<T>({
           ) : (
             <CommandList className="p-1">
               <CommandEmpty className="text-muted-foreground px-2 py-1 text-sm">
-                {emptyMessage}
+                {emptyMessageText}
               </CommandEmpty>
               <CommandGroup>
                 {options.map((option) => (
@@ -159,7 +164,9 @@ export function AsyncSelect<T>({
                     className="flex cursor-pointer items-center rounded px-2 py-1 data-[selected=true]:bg-gray-100"
                   >
                     <Plus className="mr-2 h-4 w-4" />
-                    Create {search ? `"${search}"` : 'new category'}
+                    {search
+                      ? t('common.select.createWithValue', { value: search })
+                      : t('common.select.createNewCategory')}
                   </CommandItem>
                 )}
               </CommandGroup>

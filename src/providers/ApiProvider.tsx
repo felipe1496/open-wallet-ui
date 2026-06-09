@@ -3,6 +3,7 @@ import { Api } from '../api/api';
 import { env } from '../utils/functions';
 import { ApiContext } from './ApiContext';
 import { useSession } from '../hooks/useSession';
+import { useTranslation } from 'react-i18next';
 
 export interface ApiProviderProps {
   children: ReactNode;
@@ -10,6 +11,7 @@ export interface ApiProviderProps {
 }
 
 export const ApiProvider: FC<ApiProviderProps> = ({ children, apiClient }) => {
+  const { t } = useTranslation();
   const [api] = useState<Api<unknown>>(() => {
     if (apiClient) {
       return apiClient;
@@ -25,7 +27,7 @@ export const ApiProvider: FC<ApiProviderProps> = ({ children, apiClient }) => {
         const response = await fetch(...fetchParams);
 
         if (response.status === 401) {
-          useSession.getState().logout('Your session has expired. Please log in again.');
+          useSession.getState().logout(t('session.expired'));
         }
         return response;
       },

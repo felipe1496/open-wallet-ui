@@ -15,12 +15,14 @@ import { Zelda } from './commons/Zelda';
 import { Button } from './commons/Button';
 import { useCollapsed } from '../hooks/useCollapsed';
 import { MENU } from '../constants/menu';
+import { useTranslation } from 'react-i18next';
 
 export const NavBar: FC = () => {
   const collapsed = useCollapsed((state) => state.isCollapsed);
   const setCollapsed = useCollapsed((state) => state.setIsCollapsed);
   const location = useLocation();
   const { sessionUser, logout } = useSession();
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -39,7 +41,9 @@ export const NavBar: FC = () => {
             collapsed ? 'justify-center' : 'justify-between',
           )}
         >
-          {!collapsed && <img src="/logo.webp" alt="Open Wallet Logo" className="w-12" />}
+          {!collapsed && (
+            <img src="/logo.webp" alt={t('common.alt.openWalletLogo')} className="w-12" />
+          )}
           <Button
             className="size-10 rounded-full"
             size="sm"
@@ -52,7 +56,7 @@ export const NavBar: FC = () => {
         <nav className="flex w-full flex-col gap-1 border-red-500">
           {MENU.ITEMS.map((item) => (
             <Zelda
-              key={item.label}
+              key={item.labelKey}
               to={item.route}
               className={cn(
                 'flex h-12 items-center gap-3 rounded transition-colors hover:bg-zinc-200',
@@ -63,7 +67,7 @@ export const NavBar: FC = () => {
               keepQueryParams
             >
               <item.icon className="size-5 shrink-0" />
-              {!collapsed && item.label}
+              {!collapsed && t(item.labelKey)}
             </Zelda>
           ))}
         </nav>
@@ -83,7 +87,7 @@ export const NavBar: FC = () => {
                 <Avatar>
                   <AvatarImage
                     src={sessionUser?.avatar_url}
-                    alt="Profile picture"
+                    alt={t('common.alt.profilePicture')}
                     className="size-6 shrink-0 rounded-full"
                   />
                   <AvatarFallback>
@@ -108,7 +112,7 @@ export const NavBar: FC = () => {
               }}
             >
               <LogOutIcon className="size-4" />
-              Log out
+              {t('common.actions.logOut')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

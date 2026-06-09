@@ -1,0 +1,255 @@
+{
+  "common": {
+    "actions": {
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "save": "Salvar",
+      "delete": "Excluir",
+      "back": "Voltar",
+      "next": "Próximo",
+      "logOut": "Sair",
+      "showMore": "Ver mais",
+      "showLess": "Ver menos"
+    },
+    "loading": "carregando",
+    "alt": {
+      "profilePicture": "Foto de perfil",
+      "openWalletLogo": "Logo da Open Wallet",
+      "errorImage": "imagem de erro",
+      "googleIcon": "ícone do Google",
+      "noResultsFound": "nenhum resultado encontrado"
+    },
+    "errors": {
+      "unexpected": "Ocorreu um erro inesperado"
+    },
+    "select": {
+      "placeholder": "Selecione uma opção...",
+      "searchPlaceholder": "Pesquisar...",
+      "emptyMessage": "Nenhum resultado.",
+      "clearSelection": "Limpar seleção",
+      "createWithValue": "Criar \"{{value}}\"",
+      "createNewCategory": "Criar nova categoria",
+      "categoryPlaceholder": "Selecione uma categoria..."
+    },
+    "pagination": {
+      "showingItems": "Mostrando {{start}}-{{end}} de {{total}} itens",
+      "firstPage": "Primeira página",
+      "previousPage": "Página anterior",
+      "page": "Página {{page}}",
+      "nextPage": "Próxima página",
+      "lastPage": "Última página"
+    },
+    "empty": {
+      "noDataFound": "Nenhum dado encontrado",
+      "noCategoriesTitle": "Ainda não há transações com categorias",
+      "noCategoriesDescription": "Categorize suas transações para ver alguns insights"
+    },
+    "periodPicker": {
+      "placeholder": "Selecione o período"
+    },
+    "form": {
+      "fields": {
+        "name": "Nome",
+        "amount": "Valor",
+        "category": "Categoria",
+        "date": "Data",
+        "description": "Descrição",
+        "totalAmount": "Valor Total",
+        "installments": "Parcelas",
+        "color": "Cor",
+        "day": "Dia",
+        "period": "Período",
+        "note": "Observação",
+        "dayOfMonth": "Dia do mês",
+        "startPeriod": "Período inicial",
+        "endPeriod": "Período final"
+      },
+      "placeholders": {
+        "transactionName": "Ingresso de cinema, Mercado...",
+        "start": "Início",
+        "end": "Fim"
+      },
+      "validation": {
+        "nameRequired": "Nome é obrigatório",
+        "nameTooLong": "Nome é muito longo",
+        "invalidDate": "Data inválida",
+        "descriptionTooLong": "Descrição é muito longa",
+        "installmentsInteger": "Parcelas deve ser um número inteiro",
+        "noteTooLong": "Observação é muito longa",
+        "colorRequired": "Cor é obrigatória",
+        "amountRequired": "Valor é obrigatório",
+        "amountGreaterThanZero": "Valor deve ser maior que 0",
+        "dayBetweenOneAndThirtyOne": "Dia deve estar entre 1 e 31",
+        "startPeriodRequired": "Período inicial é obrigatório",
+        "endPeriodBeforeStart": "Período final não pode ser anterior ao período inicial"
+      }
+    }
+  },
+  "dates": {
+    "months": {
+      "short": ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+      "full": [
+        "Janeiro",
+        "Fevereiro",
+        "Março",
+        "Abril",
+        "Maio",
+        "Junho",
+        "Julho",
+        "Agosto",
+        "Setembro",
+        "Outubro",
+        "Novembro",
+        "Dezembro"
+      ]
+    },
+    "dayOfMonth": "{{day}} de {{month}}"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "wallet": "Carteira",
+    "categories": "Categorias",
+    "recurrences": "Recorrências"
+  },
+  "auth": {
+    "title": "Boas-vindas ao Open Wallet",
+    "subtitle": "Entre com seu provedor favorito",
+    "continueWithGoogle": "Continuar com Google",
+    "terms": "Ao continuar, você concorda com os Termos de Serviço e a Política de Privacidade do Open Wallet.",
+    "errors": {
+      "googleLogin": "Não foi possível entrar com o Google"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "cards": {
+      "incomeThisMonth": "Receitas deste mês",
+      "expensesThisMonth": "Despesas deste mês",
+      "balanceThisMonth": "Saldo deste mês",
+      "spendingByCategory": "Gastos por categoria",
+      "balanceByCategory": "Saldo por categoria"
+    }
+  },
+  "wallet": {
+    "title": "Carteira",
+    "addTransaction": "Adicionar Transação",
+    "transactions": "Transações",
+    "transactionTypes": {
+      "expense": "Despesa",
+      "income": "Receita",
+      "installment": "Parcelamento"
+    },
+    "new": {
+      "chooseType": "Escolha o tipo de transação",
+      "expenseDescription": "Ideal para despesas simples e únicas do seu dia.",
+      "incomeDescription": "Ideal para receitas simples e únicas do seu dia.",
+      "installmentDescription": "Ideal para parcelas mensais, como aluguel, contas, etc."
+    },
+    "installment": {
+      "preview": "Prévia"
+    },
+    "empty": {
+      "title": "Ainda não há transações",
+      "description": "Tente adicionar uma"
+    },
+    "confirmDelete": {
+      "title": "Excluir Transação",
+      "description": "Esta ação vai excluir este lançamento e todos os outros lançamentos relacionados a ele. Tem certeza? Esta ação não pode ser desfeita."
+    },
+    "instance": {
+      "onlyThisOne": "Apenas esta",
+      "thisAndFollowing": "Esta e as seguintes",
+      "allInSeries": "Todas da série",
+      "ariaLabel": "Escolha instâncias para editar"
+    }
+  },
+  "categories": {
+    "title": "Categorias",
+    "addCategory": "Adicionar Categoria",
+    "list": {
+      "header": "Crie categorias e atribua às suas transações"
+    },
+    "confirmDelete": {
+      "title": "Excluir Categoria",
+      "description": "Esta ação vai excluir esta categoria e deixar os lançamentos associados a ela sem categoria."
+    }
+  },
+  "recurrences": {
+    "title": "Recorrências",
+    "addRecurrence": "Adicionar Recorrência",
+    "editRecurrence": "Editar Recorrência",
+    "list": {
+      "header": "Gerencie seus lançamentos recorrentes"
+    },
+    "empty": {
+      "title": "Ainda não há recorrências",
+      "description": "Crie regras para automatizar seus lançamentos"
+    },
+    "delete": {
+      "title": "Excluir Recorrência",
+      "question": "Como você quer excluir esta recorrência?",
+      "keepHistory": "Manter histórico",
+      "keepHistoryDescription": "Mantenha as transações dos períodos anteriores e atual. Interrompa recorrências futuras.",
+      "deleteAll": "Excluir tudo",
+      "deleteAllDescription": "Remova todas as transações associadas a esta regra de recorrência."
+    }
+  },
+  "notifications": {
+    "transactions": {
+      "created": "Transação criada com sucesso",
+      "createError": "Houve um erro ao criar a transação",
+      "updated": "Transação atualizada com sucesso",
+      "updateError": "Houve um erro ao atualizar a transação",
+      "deleteError": "Ocorreu um erro ao excluir a transação"
+    },
+    "categories": {
+      "created": "Categoria criada com sucesso",
+      "createError": "Houve um erro ao criar a categoria",
+      "updated": "Categoria atualizada com sucesso",
+      "updateError": "Houve um erro ao atualizar a categoria",
+      "deleted": "Categoria excluída com sucesso",
+      "deleteError": "Houve um erro ao excluir a categoria"
+    },
+    "recurrences": {
+      "created": "Recorrência criada com sucesso",
+      "createError": "Houve um erro ao criar a recorrência",
+      "updated": "Recorrência atualizada com sucesso",
+      "updateError": "Houve um erro ao atualizar a recorrência",
+      "deleted": "Recorrência excluída com sucesso",
+      "deleteError": "Houve um erro ao excluir a recorrência"
+    }
+  },
+  "session": {
+    "expired": "Sua sessão expirou. Entre novamente."
+  },
+  "loaderWords": {
+    "wallet": {
+      "sums": "somas",
+      "expenses": "despesas",
+      "incomes": "receitas",
+      "installments": "parcelas",
+      "transactions": "transações"
+    },
+    "dashboard": {
+      "insights": "insights",
+      "spending": "gastos",
+      "analysis": "análise",
+      "review": "revisão",
+      "graphs": "gráficos"
+    },
+    "categories": {
+      "sums": "somas",
+      "categories": "categorias",
+      "spentPerMonth": "gastos por mês",
+      "colors": "cores",
+      "labels": "rótulos"
+    },
+    "recurrences": {
+      "loops": "ciclos",
+      "recurrences": "recorrências",
+      "monthlyEntries": "lançamentos mensais",
+      "automation": "automação",
+      "rules": "regras"
+    }
+  }
+}

@@ -7,11 +7,13 @@ import { ErrorBoundary } from './commons/ErrorBoundary';
 import { useCollapsed } from '../hooks/useCollapsed';
 import { cn } from '../utils/functions';
 import { TopBar } from './TopBar';
+import { useTranslation } from 'react-i18next';
 
 export const Layout: FC = () => {
   const collapsed = useCollapsed((state) => state.isCollapsed);
   const { sessionUser } = useSession();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const logoutMessage = sessionStorage.getItem('logout_message');
@@ -36,8 +38,8 @@ export const Layout: FC = () => {
       <ErrorBoundary
         fallback={
           <div className="flex flex-col items-center justify-center gap-2 py-16">
-            <img src="/error.webp" alt="error image" className="size-12" />
-            <h1 className="text-xl font-medium">An unexpected error has occurred</h1>
+            <img src="/error.webp" alt={t('common.alt.errorImage')} className="size-12" />
+            <h1 className="text-xl font-medium">{t('common.errors.unexpected')}</h1>
           </div>
         }
       >
