@@ -16,9 +16,12 @@ import { DeleteRecurrenceModal } from './DeleteRecurrenceModal';
 
 import { useAPI } from '../../../hooks/useAPI';
 import type { Recurrence } from '../../../queries/recurrences-queries';
+import { useTranslation } from 'react-i18next';
+import type { Category } from '../../../queries/categories-queries';
 
 export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => {
   const api = useAPI();
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState<{
     id: string;
     defaultValues: NonNullable<ComponentProps<typeof SaveRecurrenceDialog>['defaultValues']>;
@@ -67,8 +70,8 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
 
   const { mutate: deleteRecurrence, isPending: isDeleteRecurrencePending } = useDeleteRecurrence({
     meta: {
-      successNotification: 'Recurrence deleted successfully',
-      errorNotification: 'There was an error deleting the recurrence',
+      successNotification: t('notifications.recurrences.deleted'),
+      errorNotification: t('notifications.recurrences.deleteError'),
       invalidateQuery: [recurrencesKeys.all()],
     },
     onSuccess: () => {
@@ -78,8 +81,8 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
 
   const { mutate: patchRecurrence, isPending: isPatchRecurrencePending } = usePatchRecurrence({
     meta: {
-      successNotification: 'Recurrence updated successfully',
-      errorNotification: 'There was an error updating the recurrence',
+      successNotification: t('notifications.recurrences.updated'),
+      errorNotification: t('notifications.recurrences.updateError'),
       invalidateQuery: [recurrencesKeys.all()],
     },
   });
@@ -88,7 +91,7 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
     <div className="flex flex-col items-center gap-4">
       <Card
         className="flex justify-center p-0"
-        header={<h2 className="text-muted-foreground">Manage your recurring entries</h2>}
+        header={<h2 className="text-muted-foreground">{t('recurrences.list.header')}</h2>}
       >
         <div className="flex w-full flex-col">
           {recurrencesData.length > 0 ? (
@@ -97,12 +100,12 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
               columns={[
                 {
                   id: 'name',
-                  title: 'Name',
+                  title: t('common.form.fields.name'),
                   render: (row) => <span>{row.name}</span>,
                 },
                 {
                   id: 'amount',
-                  title: 'Amount',
+                  title: t('common.form.fields.amount'),
                   render: (row) => (
                     <span className="font-semibold text-red-400">
                       {Intl.NumberFormat('en-US', {
@@ -114,12 +117,12 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
                 },
                 {
                   id: 'day_of_month',
-                  title: 'Day',
+                  title: t('common.form.fields.day'),
                   render: (row) => <span>{row.day_of_month}</span>,
                 },
                 {
                   id: 'start_period',
-                  title: 'Period',
+                  title: t('common.form.fields.period'),
                   render: (row) => (
                     <div className="flex flex-col text-zinc-500">
                       {row.start_period} {row.end_period ? `- ${row.end_period}` : ''}
@@ -128,7 +131,7 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
                 },
                 {
                   id: 'note',
-                  title: 'Note',
+                  title: t('common.form.fields.note'),
                   render: (row) => <span>{row.note}</span>,
                 },
                 {
@@ -158,7 +161,7 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
                                       id: row.category_id,
                                       name: row.category_name,
                                       color: row.category_color,
-                                    },
+                                    } as Category,
                                   }
                                 : null,
                             },
@@ -183,11 +186,11 @@ export const RecurrencesList = ({ onAddClick }: { onAddClick?: () => void }) => 
             <div className="flex flex-col items-center justify-center pb-8">
               <img src="/empty_state_recurrences.webp" alt="" className="size-28" />
 
-              <span className="mt-3 text-lg font-medium">No recurrences yet</span>
-              <span className="text-muted-foreground">Create rules to automate your entries</span>
+              <span className="mt-3 text-lg font-medium">{t('recurrences.empty.title')}</span>
+              <span className="text-muted-foreground">{t('recurrences.empty.description')}</span>
 
               <Button className="mt-3" variant="outlined" onClick={onAddClick}>
-                Add Recurrence
+                {t('recurrences.addRecurrence')}
               </Button>
             </div>
           )}

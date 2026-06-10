@@ -7,15 +7,18 @@ import { usePostRecurrence } from '../../hooks/mutations/usePostRecurrence';
 import { recurrencesKeys } from '../../queries/recurrences-queries';
 import { LoaderWords } from '../../components/commons/loader/LoaderWords';
 import { parseUSD } from '../../utils/functions';
+import { LanguageSwitch } from '../../i18n/LanguageSwitch';
+import { useTranslation } from 'react-i18next';
 
 export const RecurrencesPage: FC = () => {
   const [addRecurrenceVisible, setAddRecurrenceVisible] = useState(false);
+  const { t } = useTranslation();
 
   const { mutate: postRecurrence, isPending } = usePostRecurrence({
     onSuccess: () => setAddRecurrenceVisible(false),
     meta: {
-      successNotification: 'Recurrence created successfully',
-      errorNotification: 'There was an error creating the recurrence',
+      successNotification: t('notifications.recurrences.created'),
+      errorNotification: t('notifications.recurrences.createError'),
       invalidateQuery: [recurrencesKeys.all()],
     },
   });
@@ -24,9 +27,10 @@ export const RecurrencesPage: FC = () => {
     <Page>
       <main className="flex flex-col p-2">
         <header className="mb-4 flex w-full items-center justify-between">
-          <h1 className="text-xl font-medium">Recurrences</h1>
+          <h1 className="text-xl font-medium">{t('recurrences.title')}</h1>
 
           <div className="flex gap-2">
+            <LanguageSwitch />
             <SaveRecurrenceDialog
               isVisible={addRecurrenceVisible}
               onVisibleChange={setAddRecurrenceVisible}
@@ -51,7 +55,7 @@ export const RecurrencesPage: FC = () => {
               }}
               isLoading={isPending}
             >
-              <Button>Add Recurrence</Button>
+              <Button>{t('recurrences.addRecurrence')}</Button>
             </SaveRecurrenceDialog>
           </div>
         </header>
@@ -60,7 +64,13 @@ export const RecurrencesPage: FC = () => {
           fallback={
             <div className="flex h-[calc(100vh-10rem)] items-center justify-center">
               <LoaderWords
-                words={['loops', 'recurrences', 'monthly entries', 'automation', 'rules']}
+                words={[
+                  t('loaderWords.recurrences.loops'),
+                  t('loaderWords.recurrences.recurrences'),
+                  t('loaderWords.recurrences.monthlyEntries'),
+                  t('loaderWords.recurrences.automation'),
+                  t('loaderWords.recurrences.rules'),
+                ]}
               />
             </div>
           }

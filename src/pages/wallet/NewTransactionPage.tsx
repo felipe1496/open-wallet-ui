@@ -12,6 +12,7 @@ import { SaveInstallmentDialog } from './components/SaveInstallmentDialog';
 import { usePostTransaction } from '../../hooks/mutations/usePostTransaction';
 import { usePeriod } from '../../hooks/usePeriod';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 export const NewTransactionPage: FC = () => {
   const [simpleExpenseIsVisible, setSimpleExpenseIsVisible] = useState(false);
@@ -19,6 +20,7 @@ export const NewTransactionPage: FC = () => {
   const [installmentIsVisible, setInstallmentIsVisible] = useState(false);
   const navigate = useNavigate();
   const { period } = usePeriod();
+  const { t } = useTranslation();
   const date =
     dayjs(`${period.year}-${period.month + 1}`).format('YYYY-MM') === dayjs().format('YYYY-MM')
       ? dayjs().format('YYYY-MM-DD')
@@ -35,8 +37,8 @@ export const NewTransactionPage: FC = () => {
       });
     },
     meta: {
-      successNotification: 'Transaction created successfully',
-      errorNotification: 'There was an error creating the transaction',
+      successNotification: t('notifications.transactions.created'),
+      errorNotification: t('notifications.transactions.createError'),
       invalidateQuery: [transactionsKeys.all()],
     },
   });
@@ -45,11 +47,11 @@ export const NewTransactionPage: FC = () => {
     <Page>
       <main className="flex w-full flex-col items-center p-2">
         <header className="mb-4 flex w-full items-center justify-between">
-          <h1 className="text-xl font-medium">Add Transaction</h1>
+          <h1 className="text-xl font-medium">{t('wallet.addTransaction')}</h1>
         </header>
 
         <Card
-          header={<h2 className="text-muted-foreground">Choose the type of transaction</h2>}
+          header={<h2 className="text-muted-foreground">{t('wallet.new.chooseType')}</h2>}
           className="flex items-center justify-center"
         >
           <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
@@ -86,12 +88,10 @@ export const NewTransactionPage: FC = () => {
               <div className="flex items-center gap-2">
                 <BanknoteArrowDownIcon strokeWidth={1.5} className="size-7 text-red-500" />
 
-                <h3 className="font-medium">Expense</h3>
+                <h3 className="font-medium">{t('wallet.transactionTypes.expense')}</h3>
               </div>
 
-              <p className="text-muted-foreground text-sm">
-                Suitable for one-time simple expenses on your day.
-              </p>
+              <p className="text-muted-foreground text-sm">{t('wallet.new.expenseDescription')}</p>
             </button>
 
             <SaveIncomeDialog
@@ -124,12 +124,10 @@ export const NewTransactionPage: FC = () => {
               <div className="flex items-center gap-2">
                 <BanknoteArrowUpIcon strokeWidth={1.5} className="size-7 text-green-500" />
 
-                <h3 className="font-medium">Income</h3>
+                <h3 className="font-medium">{t('wallet.transactionTypes.income')}</h3>
               </div>
 
-              <p className="text-muted-foreground text-sm">
-                Suitable for one-time simple incomes on your day.
-              </p>
+              <p className="text-muted-foreground text-sm">{t('wallet.new.incomeDescription')}</p>
             </button>
 
             <SaveInstallmentDialog
@@ -167,11 +165,11 @@ export const NewTransactionPage: FC = () => {
               <div className="flex items-center gap-2">
                 <SquareDivideIcon strokeWidth={1.5} className="size-6 text-amber-500" />
 
-                <h3 className="font-medium">Installment</h3>
+                <h3 className="font-medium">{t('wallet.transactionTypes.installment')}</h3>
               </div>
 
               <p className="text-muted-foreground text-sm">
-                Suitable for monthly installments, such as rent, utilities, etc.
+                {t('wallet.new.installmentDescription')}
               </p>
             </button>
           </div>

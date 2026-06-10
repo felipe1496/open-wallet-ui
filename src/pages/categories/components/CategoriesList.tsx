@@ -11,9 +11,11 @@ import { useEffect, useRef, useState, type ComponentProps } from 'react';
 import { transactionsKeys } from '../../../queries/transactions-queries';
 import { useAPI } from '../../../hooks/useAPI';
 import { Spinner } from '../../../components/commons/loader/Spinner';
+import { useTranslation } from 'react-i18next';
 
 export const CategoriesList = () => {
   const api = useAPI();
+  const { t } = useTranslation();
   const {
     data: categoriesData,
     fetchNextPage,
@@ -63,16 +65,16 @@ export const CategoriesList = () => {
 
   const { mutate: deleteCategory } = useDeleteCategory({
     meta: {
-      successNotification: 'Category deleted successfully',
-      errorNotification: 'There was an error deleting the category',
+      successNotification: t('notifications.categories.deleted'),
+      errorNotification: t('notifications.categories.deleteError'),
       invalidateQuery: [categoriesKeys.all(), transactionsKeys.all()],
     },
   });
 
   const { mutate: patchCategory, isPending: isPatchCategoryPending } = usePatchCategory({
     meta: {
-      successNotification: 'Category updated successfully',
-      errorNotification: 'There was an error updating the category',
+      successNotification: t('notifications.categories.updated'),
+      errorNotification: t('notifications.categories.updateError'),
       invalidateQuery: [categoriesKeys.all()],
     },
   });
@@ -81,11 +83,7 @@ export const CategoriesList = () => {
     <div className="flex flex-col items-center gap-4">
       <Card
         className="flex flex-col items-center justify-center"
-        header={
-          <h2 className="text-muted-foreground">
-            Create categories and assign to your transactions
-          </h2>
-        }
+        header={<h2 className="text-muted-foreground">{t('categories.list.header')}</h2>}
       >
         <div className="flex w-full max-w-4xl flex-col gap-2">
           {categoriesData.length > 0 ? (
@@ -120,8 +118,8 @@ export const CategoriesList = () => {
                     variant="outlined"
                     onClick={() =>
                       confirm.add(
-                        'Delete Category',
-                        'This action will delete this category and let entries associated to it orphaned.',
+                        t('categories.confirmDelete.title'),
+                        t('categories.confirmDelete.description'),
                         () => deleteCategory(category.id!),
                       )
                     }
@@ -134,8 +132,10 @@ export const CategoriesList = () => {
           ) : (
             <div className="flex flex-col items-center justify-center">
               <img src="/empty_state_tag.webp" alt="" className="size-20" />
-              <span className="mt-3 text-lg font-medium">No transactions with categories yet</span>
-              <span>Categorize your transactions to check some insights</span>
+              <span className="mt-3 text-lg font-medium">
+                {t('common.empty.noCategoriesTitle')}
+              </span>
+              <span>{t('common.empty.noCategoriesDescription')}</span>
             </div>
           )}
         </div>

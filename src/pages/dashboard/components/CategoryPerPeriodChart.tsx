@@ -5,10 +5,12 @@ import { getCategoriesPerPeriodQueryOpts } from '../../../queries/categories-que
 import { usePeriod } from '../../../hooks/usePeriod';
 import dayjs from 'dayjs';
 import { useAPI } from '../../../hooks/useAPI';
+import { useTranslation } from 'react-i18next';
 
 export const CategoryPerPeriod: FC = () => {
   const { period } = usePeriod();
   const api = useAPI();
+  const { t } = useTranslation();
 
   const { data } = useSuspenseQuery({
     ...getCategoriesPerPeriodQueryOpts(
@@ -89,8 +91,8 @@ export const CategoryPerPeriod: FC = () => {
     return (
       <div className="flex flex-col items-center justify-center text-center">
         <img src="/empty_state_donut.webp" alt="" className="size-24" />
-        <span className="text-lg font-medium">No transactions with categories yet</span>
-        <span>Categorize your transactions to check some insights</span>
+        <span className="text-lg font-medium">{t('common.empty.noCategoriesTitle')}</span>
+        <span>{t('common.empty.noCategoriesDescription')}</span>
       </div>
     );
   }

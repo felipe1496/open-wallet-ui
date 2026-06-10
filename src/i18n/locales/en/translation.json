@@ -1,0 +1,255 @@
+{
+  "common": {
+    "actions": {
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "save": "Save",
+      "delete": "Delete",
+      "back": "Back",
+      "next": "Next",
+      "logOut": "Log out",
+      "showMore": "Show more",
+      "showLess": "Show less"
+    },
+    "loading": "loading",
+    "alt": {
+      "profilePicture": "Profile picture",
+      "openWalletLogo": "Open Wallet Logo",
+      "errorImage": "error image",
+      "googleIcon": "google icon",
+      "noResultsFound": "no results found"
+    },
+    "errors": {
+      "unexpected": "An unexpected error has occurred"
+    },
+    "select": {
+      "placeholder": "Select an option...",
+      "searchPlaceholder": "Search...",
+      "emptyMessage": "No results.",
+      "clearSelection": "Clear selection",
+      "createWithValue": "Create \"{{value}}\"",
+      "createNewCategory": "Create new category",
+      "categoryPlaceholder": "Select a category..."
+    },
+    "pagination": {
+      "showingItems": "Showing {{start}}-{{end}} of {{total}} items",
+      "firstPage": "First page",
+      "previousPage": "Previous page",
+      "page": "Page {{page}}",
+      "nextPage": "Next page",
+      "lastPage": "Last page"
+    },
+    "empty": {
+      "noDataFound": "No data found",
+      "noCategoriesTitle": "No transactions with categories yet",
+      "noCategoriesDescription": "Categorize your transactions to check some insights"
+    },
+    "periodPicker": {
+      "placeholder": "Select period"
+    },
+    "form": {
+      "fields": {
+        "name": "Name",
+        "amount": "Amount",
+        "category": "Category",
+        "date": "Date",
+        "description": "Description",
+        "totalAmount": "Total Amount",
+        "installments": "Installments",
+        "color": "Color",
+        "day": "Day",
+        "period": "Period",
+        "note": "Note",
+        "dayOfMonth": "Day of Month",
+        "startPeriod": "Start Period",
+        "endPeriod": "End Period"
+      },
+      "placeholders": {
+        "transactionName": "Cinema ticket, Groceries...",
+        "start": "Start",
+        "end": "End"
+      },
+      "validation": {
+        "nameRequired": "Name is required",
+        "nameTooLong": "Name is too long",
+        "invalidDate": "Invalid date",
+        "descriptionTooLong": "Description is too long",
+        "installmentsInteger": "Installments must be an integer",
+        "noteTooLong": "Note is too long",
+        "colorRequired": "Color is required",
+        "amountRequired": "Amount is required",
+        "amountGreaterThanZero": "Amount must be greater than 0",
+        "dayBetweenOneAndThirtyOne": "Day must be between 1 and 31",
+        "startPeriodRequired": "Start Period is required",
+        "endPeriodBeforeStart": "End period cannot be before start period"
+      }
+    }
+  },
+  "dates": {
+    "months": {
+      "short": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+      "full": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "dayOfMonth": "{{day}} of {{month}}"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "wallet": "Wallet",
+    "categories": "Categories",
+    "recurrences": "Recurrences"
+  },
+  "auth": {
+    "title": "Welcome to Open Wallet",
+    "subtitle": "Log in with your favorite provider",
+    "continueWithGoogle": "Continue with Google",
+    "terms": "By continuing, you agree to Open Wallet's Terms of Service and Privacy Policy.",
+    "errors": {
+      "googleLogin": "It was not possible to login with Google"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "cards": {
+      "incomeThisMonth": "Income this month",
+      "expensesThisMonth": "Expenses this month",
+      "balanceThisMonth": "Balance this month",
+      "spendingByCategory": "Spending by category",
+      "balanceByCategory": "Balance by category"
+    }
+  },
+  "wallet": {
+    "title": "Wallet",
+    "addTransaction": "Add Transaction",
+    "transactions": "Transactions",
+    "transactionTypes": {
+      "expense": "Expense",
+      "income": "Income",
+      "installment": "Installment"
+    },
+    "new": {
+      "chooseType": "Choose the type of transaction",
+      "expenseDescription": "Suitable for one-time simple expenses on your day.",
+      "incomeDescription": "Suitable for one-time simple incomes on your day.",
+      "installmentDescription": "Suitable for monthly installments, such as rent, utilities, etc."
+    },
+    "installment": {
+      "preview": "Preview"
+    },
+    "empty": {
+      "title": "No transactions yet",
+      "description": "Try adding one"
+    },
+    "confirmDelete": {
+      "title": "Delete Transaction",
+      "description": "This action will delete this entry and all other entries related to it. Are you sure? This action cannot be undone."
+    },
+    "instance": {
+      "onlyThisOne": "Only this one",
+      "thisAndFollowing": "This and following",
+      "allInSeries": "All in series",
+      "ariaLabel": "Chose instances to edit"
+    }
+  },
+  "categories": {
+    "title": "Categories",
+    "addCategory": "Add Category",
+    "list": {
+      "header": "Create categories and assign to your transactions"
+    },
+    "confirmDelete": {
+      "title": "Delete Category",
+      "description": "This action will delete this category and let entries associated to it orphaned."
+    }
+  },
+  "recurrences": {
+    "title": "Recurrences",
+    "addRecurrence": "Add Recurrence",
+    "editRecurrence": "Edit Recurrence",
+    "list": {
+      "header": "Manage your recurring entries"
+    },
+    "empty": {
+      "title": "No recurrences yet",
+      "description": "Create rules to automate your entries"
+    },
+    "delete": {
+      "title": "Delete Recurrence",
+      "question": "How would you like to delete this recurrence?",
+      "keepHistory": "Keep history",
+      "keepHistoryDescription": "Keep transactions from previous and current periods. Stop future recurrences.",
+      "deleteAll": "Delete all",
+      "deleteAllDescription": "Remove all transactions associated with this recurrence rule."
+    }
+  },
+  "notifications": {
+    "transactions": {
+      "created": "Transaction created successfully",
+      "createError": "There was an error creating the transaction",
+      "updated": "Transaction updated successfully",
+      "updateError": "There was an error updating the transaction",
+      "deleteError": "An error occurred while deleting the transaction"
+    },
+    "categories": {
+      "created": "Category created successfully",
+      "createError": "There was an error creating the category",
+      "updated": "Category updated successfully",
+      "updateError": "There was an error updating the category",
+      "deleted": "Category deleted successfully",
+      "deleteError": "There was an error deleting the category"
+    },
+    "recurrences": {
+      "created": "Recurrence created successfully",
+      "createError": "There was an error creating the recurrence",
+      "updated": "Recurrence updated successfully",
+      "updateError": "There was an error updating the recurrence",
+      "deleted": "Recurrence deleted successfully",
+      "deleteError": "There was an error deleting the recurrence"
+    }
+  },
+  "session": {
+    "expired": "Your session has expired. Please log in again."
+  },
+  "loaderWords": {
+    "wallet": {
+      "sums": "sums",
+      "expenses": "expenses",
+      "incomes": "incomes",
+      "installments": "installments",
+      "transactions": "transactions"
+    },
+    "dashboard": {
+      "insights": "insights",
+      "spending": "spending",
+      "analysis": "analysis",
+      "review": "review",
+      "graphs": "graphs"
+    },
+    "categories": {
+      "sums": "sums",
+      "categories": "categories",
+      "spentPerMonth": "spent per month",
+      "colors": "colors",
+      "labels": "labels"
+    },
+    "recurrences": {
+      "loops": "loops",
+      "recurrences": "recurrences",
+      "monthlyEntries": "monthly entries",
+      "automation": "automation",
+      "rules": "rules"
+    }
+  }
+}

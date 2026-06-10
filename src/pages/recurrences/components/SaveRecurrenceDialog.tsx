@@ -21,35 +21,19 @@ import { Button } from '../../../components/commons/Button';
 import { Spinner } from '../../../components/commons/loader/Spinner';
 import { parseUSD } from '../../../utils/functions';
 import { Textarea } from '../../../components/commons/Textarea';
+import { useTranslation } from 'react-i18next';
+import type { Option } from '../../../components/commons/select/AsyncSelect';
+import type { Category } from '../../../queries/categories-queries';
 
-const schema = z
-  .object({
-    name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-    category: z.any().nullable().optional(),
-    note: z.string().max(400, 'Note is too long').optional(),
-    amount: z
-      .string()
-      .min(1, 'Amount is required')
-      .refine((val) => parseUSD(val) > 0, 'Amount must be greater than 0'),
-    day_of_month: z.string().refine((val) => {
-      const parsed = parseInt(val, 10);
-      return !isNaN(parsed) && parsed >= 1 && parsed <= 31;
-    }, 'Day must be between 1 and 31'),
-    start_period: z.string().min(6, 'Start Period is required'),
-    end_period: z.string().optional().nullable(),
-  })
-  .refine(
-    (data) => {
-      if (!data.end_period) return true;
-      return parseInt(data.end_period, 10) >= parseInt(data.start_period, 10);
-    },
-    {
-      message: 'End period cannot be before start period',
-      path: ['end_period'],
-    },
-  );
-
-type FormType = z.infer<typeof schema>;
+type FormType = {
+  name: string;
+  category?: Option<Category> | null;
+  note?: string;
+  amount: string;
+  day_of_month: string;
+  start_period: string;
+  end_period?: string | null;
+};
 
 const initialDefaultValues: FormType = {
   name: '',
@@ -77,6 +61,37 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
   isVisible,
   onVisibleChange,
 }) => {
+  const { t } = useTranslation();
+  const schema = z
+    .object({
+      name: z
+        .string()
+        .min(1, t('common.form.validation.nameRequired'))
+        .max(100, t('common.form.validation.nameTooLong')),
+      category: z.any().nullable().optional(),
+      note: z.string().max(400, t('common.form.validation.noteTooLong')).optional(),
+      amount: z
+        .string()
+        .min(1, t('common.form.validation.amountRequired'))
+        .refine((val) => parseUSD(val) > 0, t('common.form.validation.amountGreaterThanZero')),
+      day_of_month: z.string().refine((val) => {
+        const parsed = parseInt(val, 10);
+        return !isNaN(parsed) && parsed >= 1 && parsed <= 31;
+      }, t('common.form.validation.dayBetweenOneAndThirtyOne')),
+      start_period: z.string().min(6, t('common.form.validation.startPeriodRequired')),
+      end_period: z.string().optional().nullable(),
+    })
+    .refine(
+      (data) => {
+        if (!data.end_period) return true;
+        return parseInt(data.end_period, 10) >= parseInt(data.start_period, 10);
+      },
+      {
+        message: t('common.form.validation.endPeriodBeforeStart'),
+        path: ['end_period'],
+      },
+    );
+
   const {
     register,
     formState: { errors },
@@ -97,7 +112,9 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{defaultValues.name ? 'Edit Recurrence' : 'Add Recurrence'}</DialogTitle>
+          <DialogTitle>
+            {defaultValues.name ? t('recurrences.editRecurrence') : t('recurrences.addRecurrence')}
+          </DialogTitle>
         </DialogHeader>
         <Form
           onSubmit={(evt) => {
@@ -107,12 +124,15 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
           className="flex flex-col gap-3"
         >
           <label className="flex flex-col text-sm">
-            <span data-error={errors.name?.message || '*'}>Name</span>
-            <Input placeholder="Cinema ticket, Groceries..." {...register('name')} />
+            <span data-error={errors.name?.message || '*'}>{t('common.form.fields.name')}</span>
+            <Input
+              placeholder={t('common.form.placeholders.transactionName')}
+              {...register('name')}
+            />
           </label>
 
           <label className="flex flex-col text-sm">
-            <span>Category</span>
+            <span>{t('common.form.fields.category')}</span>
             <Controller
               name="category"
               control={control}
@@ -123,12 +143,14 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
           </label>
 
           <label className="flex flex-col text-sm">
-            <span data-error={errors.amount?.message || '*'}>Amount</span>
+            <span data-error={errors.amount?.message || '*'}>{t('common.form.fields.amount')}</span>
             <MoneyInput placeholder="0.00" {...register('amount')} />
           </label>
 
           <label className="flex flex-col text-sm">
-            <span data-error={errors.day_of_month?.message || '*'}>Day of Month</span>
+            <span data-error={errors.day_of_month?.message || '*'}>
+              {t('common.form.fields.dayOfMonth')}
+            </span>
             <NumericInput
               placeholder="1 - 31"
               {...register('day_of_month')}
@@ -140,7 +162,9 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
           <div>
             <div className="flex w-full gap-2">
               <label className="flex w-full flex-col text-sm">
-                <span data-error={errors.start_period?.message || '*'}>Start Period</span>
+                <span data-error={errors.start_period?.message || '*'}>
+                  {t('common.form.fields.startPeriod')}
+                </span>
                 <Controller
                   name="start_period"
                   control={control}
@@ -157,13 +181,13 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
                       onChange={(val) =>
                         field.onChange(dayjs().year(val.year).month(val.month).format('YYYYMM'))
                       }
-                      placeholder="Start"
+                      placeholder={t('common.form.placeholders.start')}
                     />
                   )}
                 />
               </label>
               <label className="flex w-full flex-col text-sm">
-                <span>End Period</span>
+                <span>{t('common.form.fields.endPeriod')}</span>
                 <Controller
                   name="end_period"
                   control={control}
@@ -180,7 +204,7 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
                       onChange={(val) =>
                         field.onChange(dayjs().year(val.year).month(val.month).format('YYYYMM'))
                       }
-                      placeholder="End"
+                      placeholder={t('common.form.placeholders.end')}
                     />
                   )}
                 />
@@ -192,8 +216,12 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
           </div>
 
           <label className="flex flex-col text-sm">
-            <span data-error={errors.note?.message}>Note</span>
-            <Textarea className="min-h-28" placeholder="Note" {...register('note')} />
+            <span data-error={errors.note?.message}>{t('common.form.fields.note')}</span>
+            <Textarea
+              className="min-h-28"
+              placeholder={t('common.form.fields.note')}
+              {...register('note')}
+            />
           </label>
 
           <div className="mt-4 flex w-full gap-2">
@@ -205,11 +233,11 @@ export const SaveRecurrenceDialog: FCC<Props> = ({
                 disabled={isLoading}
                 onClick={() => reset()}
               >
-                Cancel
+                {t('common.actions.cancel')}
               </Button>
             </DialogClose>
             <Button className="w-full" disabled={isLoading}>
-              {isLoading ? <Spinner variant="secondary" /> : 'Save'}
+              {isLoading ? <Spinner variant="secondary" /> : t('common.actions.save')}
             </Button>
           </div>
         </Form>

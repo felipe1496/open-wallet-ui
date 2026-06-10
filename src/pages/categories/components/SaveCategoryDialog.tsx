@@ -15,13 +15,12 @@ import { Form } from '../../../components/commons/Form';
 import { Button } from '../../../components/commons/Button';
 import { Spinner } from '../../../components/commons/loader/Spinner';
 import { ColorPalette } from '../../../components/commons/colors/ColorPalette';
+import { useTranslation } from 'react-i18next';
 
-const schema = z.object({
-  name: z.string().min(1, 'Name is required').max(50, 'Name is too long'),
-  color: z.string().min(1, 'Color is required'),
-});
-
-type Form = z.infer<typeof schema>;
+type Form = {
+  name: string;
+  color: string;
+};
 
 const initialDeafultValues: Form = {
   name: '',
@@ -44,6 +43,15 @@ export const SaveCategoryDialog: FCC<Props> = ({
   isVisible,
   onVisibleChange,
 }) => {
+  const { t } = useTranslation();
+  const schema = z.object({
+    name: z
+      .string()
+      .min(1, t('common.form.validation.nameRequired'))
+      .max(50, t('common.form.validation.nameTooLong')),
+    color: z.string().min(1, t('common.form.validation.colorRequired')),
+  });
+
   const {
     register,
     formState: { errors },
@@ -64,7 +72,7 @@ export const SaveCategoryDialog: FCC<Props> = ({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Category</DialogTitle>
+          <DialogTitle>{t('categories.addCategory')}</DialogTitle>
         </DialogHeader>
         <Form
           onSubmit={(evt) => {
@@ -73,11 +81,11 @@ export const SaveCategoryDialog: FCC<Props> = ({
           }}
         >
           <label className="flex flex-col text-sm">
-            <span data-error={errors.name?.message}>Name</span>
-            <Input placeholder="Name" {...register('name')} />
+            <span data-error={errors.name?.message}>{t('common.form.fields.name')}</span>
+            <Input placeholder={t('common.form.fields.name')} {...register('name')} />
           </label>
           <label className="pointer-events-none flex flex-col text-sm">
-            <span data-error={errors.color?.message}>Color</span>
+            <span data-error={errors.color?.message}>{t('common.form.fields.color')}</span>
             <Controller
               name="color"
               control={control}
@@ -107,11 +115,11 @@ export const SaveCategoryDialog: FCC<Props> = ({
           <div className="flex w-full gap-2">
             <DialogClose asChild>
               <Button className="w-full" variant="outlined" disabled={isLoading}>
-                Cancel
+                {t('common.actions.cancel')}
               </Button>
             </DialogClose>
             <Button className="w-full" disabled={isLoading}>
-              {isLoading ? <Spinner variant="secondary" /> : 'Save'}
+              {isLoading ? <Spinner variant="secondary" /> : t('common.actions.save')}
             </Button>
           </div>
         </Form>

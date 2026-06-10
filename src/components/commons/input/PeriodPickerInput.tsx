@@ -2,7 +2,7 @@ import { Calendar } from 'lucide-react';
 import { PeriodPickerCustom } from '../PeriodPickerCustom';
 import { cn } from '../../../utils/functions';
 import type { FC } from 'react';
-import { MONTHS_FULL } from '../../../constants/dates';
+import { useTranslation } from 'react-i18next';
 
 interface PeriodPickerProps {
   value?: { month: number; year: number };
@@ -16,12 +16,16 @@ interface PeriodPickerProps {
 export const PeriodPickerInput: FC<PeriodPickerProps> = ({
   value,
   onChange,
-  placeholder = 'Selecione o período',
+  placeholder,
   className,
   minYear = 2000,
   maxYear = 2030,
 }) => {
-  const displayValue = value ? `${MONTHS_FULL[value.month]} ${value.year}` : placeholder;
+  const { t } = useTranslation();
+  const placeholderText = placeholder ?? t('common.periodPicker.placeholder');
+  const displayValue = value
+    ? `${t('dates.months.full', { returnObjects: true })[value.month]} ${value.year}`
+    : placeholderText;
 
   return (
     <PeriodPickerCustom value={value} onChange={onChange} minYear={minYear} maxYear={maxYear}>

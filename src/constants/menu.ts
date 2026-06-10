@@ -4,24 +4,24 @@ import { ROUTES } from './routes';
 export const MENU = {
   ITEMS: [
     {
-      label: 'Dashboard',
+      labelKey: 'navigation.dashboard',
       route: ROUTES.DASHBOARD,
       icon: ChartPieIcon,
     },
     {
-      label: 'Wallet',
+      labelKey: 'navigation.wallet',
       route: ROUTES.WALLET.INDEX,
       icon: WalletMinimalIcon,
     },
     {
-      label: 'Categories',
+      labelKey: 'navigation.categories',
       route: ROUTES.CATEGORIES.INDEX,
       icon: TagsIcon,
     },
     {
-      label: 'Recurrences',
+      labelKey: 'navigation.recurrences',
       route: ROUTES.RECURRENCES.INDEX,
       icon: RepeatIcon,
     },
   ],
-};
+} as const;

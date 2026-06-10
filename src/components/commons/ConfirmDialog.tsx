@@ -3,9 +3,11 @@ import type { FC } from 'react';
 import { DialogContent, DialogHeader, DialogTitle } from './Dialog';
 import { Button } from './Button';
 import { useConfirm } from '../../hooks/useConfirm';
+import { useTranslation } from 'react-i18next';
 
 export const ConfirmDialog: FC = () => {
   const confirm = useConfirm();
+  const { t } = useTranslation();
 
   return (
     <Dialog open={confirm.isVisible} onOpenChange={confirm.setIsVisible}>
@@ -17,7 +19,7 @@ export const ConfirmDialog: FC = () => {
           <p className="my-6 text-center">{confirm.description}</p>
           <div className="flex w-full justify-end gap-2">
             <Button variant="outlined" onClick={() => confirm.setIsVisible(false)}>
-              Cancel
+              {t('common.actions.cancel')}
             </Button>
             <Button
               onClick={() => {
@@ -25,7 +27,7 @@ export const ConfirmDialog: FC = () => {
                 confirm.setIsVisible(false);
               }}
             >
-              Confirm
+              {t('common.actions.confirm')}
             </Button>
           </div>
         </div>

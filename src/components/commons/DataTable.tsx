@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from '../../utils/functions';
+import { useTranslation } from 'react-i18next';
 
 export interface Column<T> {
   id: string;
@@ -17,6 +18,8 @@ interface Props<T> {
 }
 
 export const DataTable = <T,>({ columns, data, isLoading = false, getRowProps }: Props<T>) => {
+  const { t } = useTranslation();
+
   function renderRows() {
     if (isLoading) {
       return Array.from({ length: 10 }).map((_, rowIndex) => (
@@ -34,7 +37,7 @@ export const DataTable = <T,>({ columns, data, isLoading = false, getRowProps }:
       return (
         <tr>
           <td colSpan={columns.length} className="px-3 py-1.5 text-center text-sm text-zinc-500">
-            No data found
+            {t('common.empty.noDataFound')}
           </td>
         </tr>
       );
